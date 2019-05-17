@@ -18,6 +18,13 @@ public class Evaluation implements Serializable{
 	@Id
 	@GeneratedValue
 	private long id;
+	private int vote;
+	public int getVote() {
+		return vote;
+	}
+	public void setVote(int vote) {
+		this.vote = vote;
+	}
 	private long idUser;
  	private String titre;
 	private String description;

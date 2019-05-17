@@ -37,14 +37,14 @@ public class EvaluationController {
 		}
 		
 		//create
-		@RequestMapping(method=RequestMethod.POST,value="/emplacments/{emplacementId}/evaluations")
+		@RequestMapping(method=RequestMethod.POST,value="/emplacements/{emplacementId}/evaluations")
 		public void addEvaluation(@RequestBody Evaluation evaluation ,@PathVariable String emplacementId) {		  
 		  evaluation.setEmplacement(new Emplacement(emplacementId, "", "", 0, 0));
 		  evaluationService.addEvaluation(evaluation);
 		}
 		
-		//create
-		@RequestMapping(method=RequestMethod.PUT,value="/emplacments/{emplacementId}/evaluations/{id}")
+		
+		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/{emplacementId}/evaluations/{id}")
 		public void updateEvaluation(@RequestBody Evaluation evaluation, @PathVariable long id) {
 			System.out.println("put");
 		//json code comes in then gets converted to a
@@ -52,7 +52,7 @@ public class EvaluationController {
 			evaluationService.updateEvaluation(evaluation);
 		}
 		
-		@RequestMapping(method=RequestMethod.DELETE,value="/emplacments/{emplacementId}/evaluations/{id}")
+		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/{emplacementId}/evaluations/{id}")
 		public void deleteCourse(@PathVariable long id) {
 			System.out.println("DELETE");
 			evaluationService.deleteEvaluation(id);

@@ -48,10 +48,10 @@ public class EmplacementController {
 		}
 		
 		//create
-		@RequestMapping(method=RequestMethod.POST,value="/")
-		public String test(@RequestBody String u) {
+		@RequestMapping(method=RequestMethod.GET,value="/")
+		public String test() {
 			System.out.println("-----------------------");
-			System.out.println(u);
+			System.out.println("connected");
 			System.out.println("------------------------");
 			return "Acceuil";
 		}
