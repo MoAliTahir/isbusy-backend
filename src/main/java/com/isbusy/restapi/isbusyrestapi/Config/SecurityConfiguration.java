@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.isbusy.restapi.isbusyrestapi.repositories.UserRepository;
@@ -44,16 +45,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		return new PasswordEncoder() {
 			
 			@Override
-			public boolean matches(CharSequence rawPassword, String encodedPassword) {
-				return true;
-			}
+	        public String encode(CharSequence rawPassword) {
+	            return BCrypt.hashpw(rawPassword.toString(), BCrypt.gensalt(4));
+	        }
+	        @Override
+	        public boolean matches(CharSequence rawPassword, String encodedPassword) {
+	            return BCrypt.checkpw(rawPassword.toString(), encodedPassword);
+	        }
 			
-			@Override
-			public String encode(CharSequence rawPassword) {
-				// TODO Password needs to be encoded
-				return rawPassword.toString();
-				//TODO Hacher le password !
-			}
+			
 		};
 	}
 }

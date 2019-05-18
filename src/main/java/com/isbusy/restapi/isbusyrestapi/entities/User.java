@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,6 +20,7 @@ public class User implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String nom;
 	private String prenom;
@@ -46,6 +49,7 @@ public class User implements Serializable{
 		this.id=user.id;
 		this.ville=user.getVille();
 		this.username=user.getUsername();
+		this.motDePasse=user.getMotDePasse();
 	}
 
 	public long getId() {
