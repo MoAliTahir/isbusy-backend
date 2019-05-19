@@ -38,8 +38,8 @@ public class EvaluationController {
 		
 		//create
 		@RequestMapping(method=RequestMethod.POST,value="/emplacements/{emplacementId}/evaluations")
-		public void addEvaluation(@RequestBody Evaluation evaluation ,@PathVariable String emplacementId) {		  
-		  evaluation.setEmplacement(new Emplacement(emplacementId, "", "", 0, 0));
+		public void addEvaluation(@RequestBody Evaluation evaluation ,@PathVariable long emplacementId) {		  
+		  evaluation.setEmplacement(new Emplacement(emplacementId, "", "", 0, 0,0));
 		  evaluationService.addEvaluation(evaluation);
 		}
 		

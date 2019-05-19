@@ -43,7 +43,7 @@ public class EmplacementController {
 		
 		//show
 		@RequestMapping("/emplacements/{id}")
-		public Emplacement getEmpalcement(@PathVariable String id) {
+		public Emplacement getEmplacement(@PathVariable long id) {
 			return emplacementService.getEmplacement(id);
 		}
 		
@@ -65,12 +65,12 @@ public class EmplacementController {
 		
 		//create
 		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/{id}")
-		public void updateTopic(@RequestBody Emplacement emplacement, @PathVariable String id) {
+		public void updateTopic(@RequestBody Emplacement emplacement, @PathVariable long id) {
 			emplacementService.updateEmplacement(id,emplacement);
 		}
 		//delete
 		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/{id}")
-		public void deleteTopic(@PathVariable String id) {
+		public void deleteTopic(@PathVariable long id) {
 			emplacementService.deleteEmplacement(id);
 		}
 }

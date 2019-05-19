@@ -3,6 +3,8 @@ package com.isbusy.restapi.isbusyrestapi.entities;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
@@ -12,30 +14,42 @@ public class Emplacement implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	private String id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 	private String nomEmplacement;
 	private String categorie;
 	private double latitude;
 	private double longitude;
+	private int status;
 
 
-	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude) {
+	public Emplacement(long idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude, int status) {
 		super();
 		this.id = idEmplacement;
 		this.nomEmplacement = nomEmplacement;
 		this.categorie = categorie;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.status = status;
+
 	}
 
 	public Emplacement() {
 	}
+	
+	public int getStatus() {
+		return status;
+	}
 
-	public String getId() {
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

@@ -20,18 +20,23 @@ public class Evaluation implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private int vote;
+	private long idUser;
+	private String titre;
+	private String description;
+	
+	@Temporal(TemporalType.DATE)
+	private Date date;
+	private int heure;
+
+
 	public int getVote() {
 		return vote;
 	}
 	public void setVote(int vote) {
 		this.vote = vote;
 	}
-	private long idUser;
- 	private String titre;
-	private String description;
-	@Temporal(TemporalType.DATE)
-	private Date date;
-	int heure;
+	
+	
 	
 	public Date getDate() {
 		return date;

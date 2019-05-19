@@ -48,7 +48,7 @@ public class UserController {
 			
 			//modifier 
 			@RequestMapping(method=RequestMethod.PUT,value="/users/{id}")
-			public void updateCourse(@RequestBody User user, @PathVariable long id) {
+			public void updateUser(@RequestBody User user, @PathVariable long id) {
 			//json code comes in then gets converted to a
 			//Topic instance then inserted
 				userService.updateUser(user);
@@ -56,7 +56,7 @@ public class UserController {
 			
 			//suppprimer 
 			@RequestMapping(method=RequestMethod.DELETE,value="/users/{id}")
-			public void deleteCourse(@PathVariable long id) {
+			public void deleteUser(@PathVariable long id) {
 				userService.deleteUser(id);
 			}
 

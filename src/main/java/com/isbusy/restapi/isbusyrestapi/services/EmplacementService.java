@@ -21,7 +21,7 @@ public class EmplacementService {
 	}
 	
 	
-	public Emplacement getEmplacement(String id) {
+	public Emplacement getEmplacement(long id) {
 		return emplacementRepository.findById(id).get();//we can use .orElse(Null) or .orElse(new Topic);
 	}
 	
@@ -30,12 +30,12 @@ public class EmplacementService {
 	}
 	
 	//check
-	public void deleteEmplacement(String id) {
+	public void deleteEmplacement(long id) {
 		emplacementRepository.deleteById(id);
 	}
 
 	//check
-	public void updateEmplacement(String id, Emplacement e) {
+	public void updateEmplacement(long id, Emplacement e) {
 		emplacementRepository.save(e);
 	}
 	
