@@ -63,20 +63,20 @@ public class EmplacementController {
 		}
 		
 		//create
-			@RequestMapping(method=RequestMethod.POST,value="/emplacements")
-			public void addTopic(@RequestBody Emplacement emplacement ) {
+			@RequestMapping(method=RequestMethod.POST,value="/emplacements/create")
+			public void addEmplacement(@RequestBody Emplacement emplacement ) {
 				emplacementService.addEmplacement(emplacement);
 			}
 		
 		
 		//create
-		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/{id}")
-		public void updateTopic(@RequestBody Emplacement emplacement, @PathVariable long id) {
+		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/update/{id}")
+		public void updateEmplacement(@RequestBody Emplacement emplacement, @PathVariable long id) {
 			emplacementService.updateEmplacement(id,emplacement);
 		}
 		//delete
-		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/{id}")
-		public void deleteTopic(@PathVariable long id) {
+		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/delete/{id}")
+		public void deleteEmplacement(@PathVariable long id) {
 			emplacementService.deleteEmplacement(id);
 		}
 }

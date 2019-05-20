@@ -16,9 +16,9 @@ public class EvaluationService {
 	@Autowired
 	private EvaluationRepository evaluationRepository; 
 
-	public List<Evaluation> getAllEvaluations(String topicId) {
+	public List<Evaluation> getAllEvaluations(long id) {
 		List<Evaluation>evaluations = new ArrayList<>();
-		evaluationRepository.findByEmplacementId(topicId).forEach(evaluations::add);
+		evaluationRepository.findByEmplacementId(id).forEach(evaluations::add);
 		return evaluations;
 	}
 

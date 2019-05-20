@@ -23,7 +23,7 @@ public class EvaluationController {
 		//index
 		@RequestMapping(method=RequestMethod.GET,value="/emplacements/{id}/evaluations")
 		//by default, it is a default request, if we need to use an other methode we have specify it !
-		public List<Evaluation> getAllEvaluations(@PathVariable String id) {
+		public List<Evaluation> getAllEvaluations(@PathVariable long id) {
 			System.out.println("index");
 			//as we have annotated this as a RestController the list returned 
 			//is automatically converted to JSon, daaaaamn !		
@@ -31,20 +31,20 @@ public class EvaluationController {
 		}
 		
 		//show
-		@RequestMapping("/emplacements/{emplacementId}/evaluations/{id}")
+		@RequestMapping(method=RequestMethod.GET,value="/emplacements/{emplacementId}/evaluations/{id}")
 		public Evaluation getEvaluation(@PathVariable long id) {
  			return evaluationService.getEvaluation(id);
 		}
 		
 		//create
-		@RequestMapping(method=RequestMethod.POST,value="/emplacements/{emplacementId}/evaluations")
+		@RequestMapping(method=RequestMethod.POST,value="/emplacements/create/{emplacementId}/evaluations")
 		public void addEvaluation(@RequestBody Evaluation evaluation ,@PathVariable long emplacementId) {		  
 		  evaluation.setEmplacement(new Emplacement(emplacementId, "", "", 0, 0,0));
 		  evaluationService.addEvaluation(evaluation);
 		}
 		
 		
-		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/{emplacementId}/evaluations/{id}")
+		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/update/{emplacementId}/evaluations/{id}")
 		public void updateEvaluation(@RequestBody Evaluation evaluation, @PathVariable long id) {
 			System.out.println("put");
 		//json code comes in then gets converted to a
@@ -52,7 +52,7 @@ public class EvaluationController {
 			evaluationService.updateEvaluation(evaluation);
 		}
 		
-		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/{emplacementId}/evaluations/{id}")
+		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/delete/{emplacementId}/evaluations/{id}")
 		public void deleteCourse(@PathVariable long id) {
 			System.out.println("DELETE");
 			evaluationService.deleteEvaluation(id);

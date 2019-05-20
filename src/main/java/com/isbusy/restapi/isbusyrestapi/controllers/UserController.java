@@ -39,7 +39,7 @@ public class UserController {
 			
 			//TODO : make public
 			//create 
-			@RequestMapping(method=RequestMethod.POST,value="/users")
+			@RequestMapping(method=RequestMethod.POST,value="/users/create")
 			public void addUser(@RequestBody User user) {
 			  //json code comes in then gets converted to a
 			  //Topic instance then inserted
@@ -47,7 +47,7 @@ public class UserController {
 			}
 			
 			//modifier 
-			@RequestMapping(method=RequestMethod.PUT,value="/users/{id}")
+			@RequestMapping(method=RequestMethod.PUT,value="/users/update/{id}")
 			public void updateUser(@RequestBody User user, @PathVariable long id) {
 			//json code comes in then gets converted to a
 			//Topic instance then inserted
@@ -55,7 +55,7 @@ public class UserController {
 			}
 			
 			//suppprimer 
-			@RequestMapping(method=RequestMethod.DELETE,value="/users/{id}")
+			@RequestMapping(method=RequestMethod.DELETE,value="/users/delete/{id}")
 			public void deleteUser(@PathVariable long id) {
 				userService.deleteUser(id);
 			}
