@@ -36,7 +36,7 @@ public class User implements Serializable{
 	private String adresse;
 	private String ville;
 	private int active;
-	@ManyToMany(cascade = CascadeType.MERGE)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinTable(name = "user_role", 
 				joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
 				inverseJoinColumns ={ @JoinColumn(name = "role_id", referencedColumnName = "role_id")})
