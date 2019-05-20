@@ -1,6 +1,7 @@
 package com.isbusy.restapi.isbusyrestapi.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,9 +12,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Entity
+@Table(name = "user")
 public class User implements Serializable{
 	/**
 	 * 
@@ -30,10 +36,11 @@ public class User implements Serializable{
 	private String adresse;
 	private String ville;
 	private int active;
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
-	
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(name = "user_role", 
+				joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+				inverseJoinColumns ={ @JoinColumn(name = "role_id", referencedColumnName = "role_id")})
+	private List<Role> roles;	
 
 
 	public User() {
@@ -95,7 +102,7 @@ public class User implements Serializable{
 
 
 	public void setMotDePasse(String motDePasse) {
-		this.motDePasse = motDePasse;
+		this.motDePasse = BCrypt.hashpw(motDePasse, BCrypt.gensalt(4));
 	}
 
 
@@ -148,13 +155,11 @@ public class User implements Serializable{
 
 
 
-	public Set<Role> getRoles() {
+	public List<Role> getRoles() {
 		return roles;
 	}
 
-
-
-	public void setRoles(Set<Role> roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
 	
