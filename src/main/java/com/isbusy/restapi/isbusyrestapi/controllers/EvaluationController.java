@@ -43,14 +43,7 @@ public class EvaluationController {
 		  evaluationService.addEvaluation(evaluation);
 		}
 		
-		
-		@RequestMapping(method=RequestMethod.PUT,value="/emplacements/update/{emplacementId}/evaluations/{id}")
-		public void updateEvaluation(@RequestBody Evaluation evaluation, @PathVariable long id) {
-			System.out.println("put");
-		//json code comes in then gets converted to a
-		//Topic instance then inserted
-			evaluationService.updateEvaluation(evaluation);
-		}
+
 		
 		@RequestMapping(method=RequestMethod.DELETE,value="/emplacements/delete/{emplacementId}/evaluations/{id}")
 		public void deleteCourse(@PathVariable long id) {

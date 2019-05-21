@@ -3,6 +3,8 @@ package com.isbusy.restapi.isbusyrestapi.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,11 +51,15 @@ public class EmplacementController {
 		
 		//create
 		@RequestMapping(method=RequestMethod.GET,value="/")
-		public String test() {
+		public Object test() {
 			System.out.println("-----------------------");
 			System.out.println("connected");
 			System.out.println("------------------------");
-			return "Acceuil";
+
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+
+			return auth.getPrincipal();
 		}
 		
 		//create
