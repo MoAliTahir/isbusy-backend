@@ -1,4 +1,4 @@
-package org.json;
+package com.isbusy.restapi.isbusyrestapi.json;
 
 /*
 Copyright (c) 2002 JSON.org
