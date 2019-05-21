@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isbusy.restapi.isbusyrestapi.entities.User;
 import com.isbusy.restapi.isbusyrestapi.services.UserService;
 import com.isbusy.restapi.isbusyrestapi.controllers.ResourceNotFoundException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 public class UserController {
@@ -24,55 +25,60 @@ public class UserController {
 	public String handleResourceNotFoundException() {
 		return "user/notfound";
 	}
-	//injecting the TopicService singleton
-			@Autowired 
-			private UserService userService;
-			
-			
-			//index 
-			@PreAuthorize("hasRole('ADMIN')")
-			@RequestMapping("/admin/users")
-			//by default, it is a default request, if we need to use an other methode we have specify it !
-			public List<User> getAllUsers() {
-				//as we have annotated this as a RestController the list returned 
-				//is automatically converted to JSon, daaaaamn !		
-				return userService.getAllUsers();		
-			}
-			
-			//show 
-			@RequestMapping("/users/{id}")
-			public User getUser(@PathVariable long id) {
 
-				if (! userService.userExists(id))
-					throw new ResourceNotFoundException();
-				else
-					return userService.getUser(id);
-			}
+	// injecting the TopicService singleton
+	@Autowired
+	private UserService userService;
 
-			@RequestMapping(method = RequestMethod.POST, value = "/login")
+	// index
+	@PreAuthorize("hasRole('ADMIN')")
+	@CrossOrigin
+	@RequestMapping("/admin/users")
+	// by default, it is a default request, if we need to use an other methode we
+	// have specify it !
+	public List<User> getAllUsers() {
+		// as we have annotated this as a RestController the list returned
+		// is automatically converted to JSon, daaaaamn !
+		return userService.getAllUsers();
+	}
+
+	// show
+	@CrossOrigin
+	@RequestMapping("/users/{id}")
+	public User getUser(@PathVariable long id) {
+
+		if (!userService.userExists(id))
+			throw new ResourceNotFoundException();
+		else
+			return userService.getUser(id);
+	}
+
+	@CrossOrigin
+	@RequestMapping(method = RequestMethod.POST, value = "/login")
 	public String login() {
 		return "Loged IN";
 	}
 
-			
-			//TODO : make public
-			//create 
-			@RequestMapping(method=RequestMethod.POST,value="/users/create")
-			public void addUser(@RequestBody User user) {
-			  userService.addUser(user);
-			}
-			
-			//modifier 
-			@RequestMapping(method=RequestMethod.PUT,value="/users/update/{id}")
-			public void updateUser(@RequestBody User user, @PathVariable long id) {
+	// TODO : make public
+	// create
+	@CrossOrigin
+	@RequestMapping(method = RequestMethod.POST, value = "/users/create")
+	public void addUser(@RequestBody User user) {
+		userService.addUser(user);
+	}
 
-				userService.updateUser(user);
-			}
-			
-			//suppprimer 
-			@RequestMapping(method=RequestMethod.DELETE,value="/users/delete/{id}")
-			public void deleteUser(@PathVariable long id) {
-				userService.deleteUser(id);
-			}
+	// modifier
+	@CrossOrigin
+	@RequestMapping(method = RequestMethod.PUT, value = "/users/update/{id}")
+	public void updateUser(@RequestBody User user, @PathVariable long id) {
+		userService.updateUser(user);
+	}
+
+	// suppprimer
+	@CrossOrigin
+	@RequestMapping(method = RequestMethod.DELETE, value = "/users/delete/{id}")
+	public void deleteUser(@PathVariable long id) {
+		userService.deleteUser(id);
+	}
 
 }
