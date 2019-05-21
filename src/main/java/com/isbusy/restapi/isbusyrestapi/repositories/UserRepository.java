@@ -10,5 +10,6 @@ public interface UserRepository extends  CrudRepository<User,Long>{
 
 	Optional<User> findByUsername(String username);
 	
+	//public boolean exists(Long primaryKey);
 
 }

@@ -37,4 +37,8 @@ public class UserService {
 	public void deleteUser(long id) {
 		userRepository.deleteById(id);
 	}
+
+	public boolean userExists(Long id){
+		return userRepository.existsById(id);
+	}
 }

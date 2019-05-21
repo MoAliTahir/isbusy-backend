@@ -42,9 +42,6 @@ public class Role {
 	    public void setRole(String role) {
 	        this.role = role;
 		}
-<<<<<<< HEAD
 		
-=======
->>>>>>> 59b6f71435b88a444d0e3f304aa8b3d501909a54
 
 }
