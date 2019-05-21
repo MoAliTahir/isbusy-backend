@@ -32,7 +32,7 @@ public class UserController {
 
 	// index
 	@PreAuthorize("hasRole('ADMIN')")
-	@CrossOrigin
+
 	@RequestMapping("/admin/users")
 	// by default, it is a default request, if we need to use an other methode we
 	// have specify it !
@@ -43,7 +43,7 @@ public class UserController {
 	}
 
 	// show
-	@CrossOrigin
+
 	@RequestMapping("/users/{id}")
 	public User getUser(@PathVariable long id) {
 
@@ -53,7 +53,6 @@ public class UserController {
 			return userService.getUser(id);
 	}
 
-	@CrossOrigin
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
 	public String login() {
 		return "Loged IN";
@@ -61,21 +60,21 @@ public class UserController {
 
 	// TODO : make public
 	// create
-	@CrossOrigin
+
 	@RequestMapping(method = RequestMethod.POST, value = "/users/create")
 	public void addUser(@RequestBody User user) {
 		userService.addUser(user);
 	}
 
 	// modifier
-	@CrossOrigin
+
 	@RequestMapping(method = RequestMethod.PUT, value = "/users/update/{id}")
 	public void updateUser(@RequestBody User user, @PathVariable long id) {
 		userService.updateUser(user);
 	}
 
 	// suppprimer
-	@CrossOrigin
+
 	@RequestMapping(method = RequestMethod.DELETE, value = "/users/delete/{id}")
 	public void deleteUser(@PathVariable long id) {
 		userService.deleteUser(id);
