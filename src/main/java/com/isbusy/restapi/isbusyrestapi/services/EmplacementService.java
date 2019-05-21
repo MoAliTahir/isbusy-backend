@@ -34,7 +34,7 @@ public class EmplacementService {
 	}
 
 	// check
-	public void updateEmplacement(long id, Emplacement e) {
+	public void updateEmplacement(String id, Emplacement e) {
 		emplacementRepository.save(e);
 	}
 

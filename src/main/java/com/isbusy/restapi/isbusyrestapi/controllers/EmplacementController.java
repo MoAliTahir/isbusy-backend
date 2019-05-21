@@ -69,7 +69,7 @@ public class EmplacementController {
 
 	// create
 	@RequestMapping(method = RequestMethod.PUT, value = "/emplacements/update/{id}")
-	public void updateEmplacement(@RequestBody Emplacement emplacement, @PathVariable long id) {
+	public void updateEmplacement(@RequestBody Emplacement emplacement, @PathVariable String id) {
 		emplacementService.updateEmplacement(id, emplacement);
 	}
 
