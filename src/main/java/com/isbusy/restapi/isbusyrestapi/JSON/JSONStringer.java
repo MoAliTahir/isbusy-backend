@@ -1,4 +1,4 @@
-package com.isbusy.restapi.isbusyrestapi.json;
+package com.isbusy.restapi.isbusyrestapi.JSON;
 
 /*
 Copyright (c) 2006 JSON.org

@@ -1,4 +1,4 @@
-package com.isbusy.restapi.isbusyrestapi.json;
+package com.isbusy.restapi.isbusyrestapi.JSON;
 
 import static java.lang.String.format;
 

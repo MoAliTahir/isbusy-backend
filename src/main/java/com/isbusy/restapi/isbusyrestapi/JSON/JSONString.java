@@ -1,4 +1,4 @@
-package com.isbusy.restapi.isbusyrestapi.json;
+package com.isbusy.restapi.isbusyrestapi.JSON;
 
 /**
  * The <code>JSONString</code> interface allows a <code>toJSONString()</code>

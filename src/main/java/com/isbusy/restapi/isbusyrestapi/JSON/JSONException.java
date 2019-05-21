@@ -1,4 +1,4 @@
-package com.isbusy.restapi.isbusyrestapi.json;
+package com.isbusy.restapi.isbusyrestapi.JSON;
 
 /**
  * The JSONException is thrown by the JSON.org classes when things are amiss.
