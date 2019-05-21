@@ -3,8 +3,6 @@ package com.isbusy.restapi.isbusyrestapi.entities;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
@@ -14,16 +12,15 @@ public class Emplacement implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	private String id;
 	private String nomEmplacement;
 	private String categorie;
 	private double latitude;
 	private double longitude;
 	private int status;
 
-
-	public Emplacement(long idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude, int status) {
+	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
+			int status) {
 		super();
 		this.id = idEmplacement;
 		this.nomEmplacement = nomEmplacement;
@@ -34,9 +31,16 @@ public class Emplacement implements Serializable {
 
 	}
 
+	public Emplacement(String id, double longitude, double latitude, String name, String category) {
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.nomEmplacement = name;
+		this.categorie = category;
+	}
+
 	public Emplacement() {
 	}
-	
+
 	public int getStatus() {
 		return status;
 	}
@@ -45,16 +49,12 @@ public class Emplacement implements Serializable {
 		this.status = status;
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getNomEmplacement() {
-		return nomEmplacement;
 	}
 
 	public void setNomEmplacement(String nomEmplacement) {
@@ -62,7 +62,8 @@ public class Emplacement implements Serializable {
 	}
 
 	public String getCategorie() {
-		return categorie;
+		return this.categorie;
+
 	}
 
 	public void setCategorie(String categorie) {
@@ -84,6 +85,5 @@ public class Emplacement implements Serializable {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-	
-	
+
 }

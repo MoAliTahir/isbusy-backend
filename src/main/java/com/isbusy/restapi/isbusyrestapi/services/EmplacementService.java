@@ -13,34 +13,29 @@ import com.isbusy.restapi.isbusyrestapi.repositories.EmplacementRepository;
 public class EmplacementService {
 	@Autowired
 	private EmplacementRepository emplacementRepository;
-	
+
 	public List<Emplacement> getAllEmplacements() {
 		List<Emplacement> emplacements = new ArrayList<>();
 		emplacementRepository.findAll().forEach(emplacements::add);
 		return emplacements;
 	}
-	
-	
-	public Emplacement getEmplacement(long id) {
-		return emplacementRepository.findById(id).get();//we can use .orElse(Null) or .orElse(new Topic);
+
+	public Emplacement getEmplacement(String id) {
+		return emplacementRepository.findById(id).get();// we can use .orElse(Null) or .orElse(new Topic);
 	}
-	
+
 	public void addEmplacement(Emplacement e) {
 		emplacementRepository.save(e);
 	}
-	
-	//check
-	public void deleteEmplacement(long id) {
+
+	// check
+	public void deleteEmplacement(String id) {
 		emplacementRepository.deleteById(id);
 	}
 
-	//check
+	// check
 	public void updateEmplacement(long id, Emplacement e) {
 		emplacementRepository.save(e);
 	}
-	
-	
-	
-	
-	
+
 }
