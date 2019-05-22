@@ -1,6 +1,8 @@
 package com.isbusy.restapi.isbusyrestapi.repositories;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Categorie;
@@ -8,10 +10,9 @@ import com.isbusy.restapi.isbusyrestapi.entities.Categorie;
 public interface CategorieRepository extends CrudRepository<Categorie, String> {
     boolean existsById(String id);
 
-    boolean existsByName(String nomEmplacement);
+    boolean existsByName(String name);
 
-    List<Categorie> findByName(String name);
+    Optional<Categorie> findById(String id);
 
-    List<Categorie> findAll();
-
+    Optional<Categorie> findByName(String name);
 }

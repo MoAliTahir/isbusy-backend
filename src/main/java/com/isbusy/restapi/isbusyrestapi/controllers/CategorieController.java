@@ -35,10 +35,37 @@ public class CategorieController {
     /**
      * @var CategorieService singleton
      */
+    @Autowired
     private CategorieService categorieService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/categories/")
     public List<Categorie> allCategories() {
-          return categorieService.getAllCategories();
+        return categorieService.getAllCategories();
+    }
+
+    /**
+     * Get Categorie by Id
+     * 
+     * @param id
+     * @return Categorie
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/categories/id/{id}")
+    public Categorie getCategorieById(@PathVariable String id) {
+        if (!categorieService.categorieExists(id))
+            return new Categorie(); // TODO : Should be changed to ResponseEntity
+        return categorieService.getById(id);
+    }
+
+    /**
+     * Get Categorie by Id
+     * 
+     * @param id
+     * @return Categorie
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/categories/name/{name}")
+    public Categorie getCategorieByName(@PathVariable String name) {
+        if (!categorieService.categorieExistsByName(name))
+            return new Categorie(); // TODO : Should be changed to ResponseEntity
+        return categorieService.getByName(name);
     }
 }

@@ -15,6 +15,24 @@ public class CategorieService {
     private CategorieRepository categorieRepository;
 
     public List<Categorie> getAllCategories() {
-        return categorieRepository.findAll();
+        List<Categorie> categories = new ArrayList<>();
+        categorieRepository.findAll().forEach(categories::add);
+        return categories;
+    }
+
+    public boolean categorieExists(String id) {
+        return categorieRepository.existsById(id);
+    }
+
+    public boolean categorieExistsByName(String name) {
+        return categorieRepository.existsByName(name);
+    }
+
+    public Categorie getById(String id) {
+        return categorieRepository.findById(id).get();
+    }
+
+    public Categorie getByName(String name) {
+        return categorieRepository.findByName(name).get();
     }
 }
