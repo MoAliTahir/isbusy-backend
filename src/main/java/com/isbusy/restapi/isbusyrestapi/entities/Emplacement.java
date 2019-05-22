@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 
 @Entity
 public class Emplacement implements Serializable {
@@ -17,7 +18,7 @@ public class Emplacement implements Serializable {
 	private String categorie;
 	private double latitude;
 	private double longitude;
-	private int status;
+	private int status = 0;
 
 	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
 			int status) {
@@ -28,7 +29,6 @@ public class Emplacement implements Serializable {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.status = status;
-
 	}
 
 	public Emplacement(String id, double longitude, double latitude, String name, String category) {
@@ -39,15 +39,16 @@ public class Emplacement implements Serializable {
 	}
 
 	public Emplacement(GenericEmplacement ge) {
-		this.id = ge.id;
-		this.nomEmplacement = ge.nomGenericEmplacement;
-		this.categorie = ge.categorie;
-		this.latitude = ge.latitude;
-		this.longitude = ge.longitude;
-		this.status = 1;
+		this.id = ge.getId();
+		this.nomEmplacement = ge.getNomGenericEmplacement();
+		this.categorie = ge.getCategorie();
+		this.latitude = ge.getLatitude();
+		this.longitude = ge.getLongitude();
+		this.status = 1; // Active by default because we're getting then from the API
 	}
 
 	public Emplacement() {
+
 	}
 
 	public int getStatus() {
@@ -64,6 +65,10 @@ public class Emplacement implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getNomEmplacement() {
+		return this.nomEmplacement;
 	}
 
 	public void setNomEmplacement(String nomEmplacement) {

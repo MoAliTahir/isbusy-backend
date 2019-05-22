@@ -191,7 +191,6 @@ public class Request {
         for (Object o : jsonArray) {
             GenericEmplacements.add(setGenericEmplacementAttributes(o));
         }
-        System.out.println("======================" + GenericEmplacements.get(1).getId() + "======================");
         return GenericEmplacements;
     }
 

@@ -12,19 +12,17 @@ import com.isbusy.restapi.isbusyrestapi.repositories.EvaluationRepository;
 @Service
 public class EvaluationService {
 
-	
 	@Autowired
-	private EvaluationRepository evaluationRepository; 
+	private EvaluationRepository evaluationRepository;
 
-	public List<Evaluation> getAllEvaluations(long id) {
-		List<Evaluation>evaluations = new ArrayList<>();
-		evaluationRepository.findByEmplacementId(id).forEach(evaluations::add);
+	public ArrayList<Evaluation> getAllEvaluations(String id) {
+		ArrayList<Evaluation> evaluations = new ArrayList<>();
+		evaluations.addAll(evaluationRepository.findByEmplacementId(id));
 		return evaluations;
 	}
 
-	
 	public Evaluation getEvaluation(long id) {
-		return evaluationRepository.findById(id).get();//we can use .orElse(Null) or .orElse(new Topic);
+		return evaluationRepository.findById(id).get();
 	}
 
 	public void addEvaluation(Evaluation e) {

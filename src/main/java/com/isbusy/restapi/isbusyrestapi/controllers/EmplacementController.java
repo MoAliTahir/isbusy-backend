@@ -1,12 +1,15 @@
 package com.isbusy.restapi.isbusyrestapi.controllers;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,90 +17,166 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
+import com.isbusy.restapi.isbusyrestapi.entities.Evaluation;
+import com.isbusy.restapi.isbusyrestapi.entities.User;
 import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 import com.isbusy.restapi.isbusyrestapi.Foursquare.Request;
 import com.isbusy.restapi.isbusyrestapi.JSON.JSONException;
 import com.isbusy.restapi.isbusyrestapi.services.EmplacementService;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import com.isbusy.restapi.isbusyrestapi.services.EvaluationService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 public class EmplacementController {
+	/**
+	 * TODO 1. Add ResponseEntity Method to this Controller 2. Configure Methods to
+	 * return Response Entity
+	 */
 
+	/**
+	 * @var EvaluationService Singleton
+	 */
+	@Autowired
+	private EvaluationService evaluationService;
+
+	/**
+	 * @var EmplacementService Singleton
+	 */
 	@Autowired
 	private EmplacementService emplacementService;
 
-	// index
-	@RequestMapping("/emplacements")
+	/**
+	 * Get Emplacement by ID from DB TODO : Return 404 if not found (With Response
+	 * Entity)
+	 * 
+	 * @return Emplacement
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}")
+	public Emplacement getEmplacementById(@PathVariable String id) {
+		if (emplacementService.emplacementExists(id))
+			return emplacementService.getEmplacement(id);
+		return null;// TODO : This should be a ResponseEntity with 404 status code
+	}
+
+	/**
+	 * Get emplacements by Emplacement Name if more than one if found
+	 * 
+	 * @param String Emplacement Name
+	 * @param String radius
+	 * @param String Position (lat,lon)
+	 * @return ArrayList<Emplacement>
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/query/{name}/{radius}/{position}")
+	public ArrayList<Emplacement> getEmplacementByName(@PathVariable String name, @PathVariable String radius,
+			@PathVariable String position) {
+
+		if (emplacementService.emplacementExistsByName(name)) {
+			// Emplacements already found in DB, so just return them
+			return emplacementService.getEmplacementsByName(name);
+		}
+		return handleAPICall("query", name, radius, position);
+
+	}
+
+	/**
+	 * Get all Emplacements from DB TODO : Add Response Entity
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/")
 	public List<Emplacement> getAllEmplacements() {
 		return emplacementService.getAllEmplacements();
 	}
 
-	// ------------------------------user searching for places
-	// around----------------------------------------------------------
-	// user provided latlong to get specific places around
-	@RequestMapping("/emplacement/{keyword}/{lat}/{lon}")
-	public void getEmplacementsByLatLong(@PathVariable String keyword, @PathVariable String lat,
-			@PathVariable String lon) {
-		System.out.println(keyword + "," + lat + "," + lon);
-		// getId from API
-		// check if ID is in table
-		// send object if yes
-		// get object from API(if not found )
-		// insert it in db
-		// return object
-	}
-
-	// show
-	@RequestMapping("/emplacements/{id}")
-	@CrossOrigin
-	public Emplacement getEmplacement(@PathVariable String id) {
-		return emplacementService.getEmplacement(id);
-	}
-
-	// create
-	@RequestMapping(method = RequestMethod.GET, value = "/")
-	public Object test() {
-		System.out.println("-----------------------");
-		System.out.println("connected");
-		System.out.println("------------------------");
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		return auth.getPrincipal();
-	}
-
-	// create
-	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/create")
-	public void addEmplacement(@RequestBody Emplacement emplacement) {
+	/**
+	 * Add new Emplacement TODO : Add ResponseEntity
+	 * 
+	 * @param Emplacement
+	 * @return Emplacement
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/add")
+	public Emplacement addEmplacement(@RequestBody Emplacement emplacement) {
 		emplacementService.addEmplacement(emplacement);
-	}
-
-	// create
-	@RequestMapping(method = RequestMethod.PUT, value = "/emplacements/update/{id}")
-	public void updateEmplacement(@RequestBody Emplacement emplacement, @PathVariable String id) {
-		emplacementService.updateEmplacement(id, emplacement);
-	}
-
-	// delete
-	@RequestMapping(method = RequestMethod.DELETE, value = "/emplacements/delete/{id}")
-	public void deleteEmplacement(@PathVariable String id) {
-		emplacementService.deleteEmplacement(id);
+		return emplacement;
 	}
 
 	/**
-	 * Testing Foursquare API
+	 * Get all Evaluations for an Emplacement TODO : Implement ResponseEntity
+	 * 
+	 * @param String Emplacement Id
+	 * @return ArrayList<Evaluation> a table of Evaluations
+	 * 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/test")
-	public ArrayList<GenericEmplacement> testAPI() {
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/evaluations")
+	public ArrayList<Evaluation> getEmplacementEvaluations(@PathVariable String id) {
+		if (!emplacementService.emplacementExists(id))
+			return new ArrayList<Evaluation>();
+		return evaluationService.getAllEvaluations(id);
+	}
+
+	/**
+	 * Evaluate an Emplacement with its ID
+	 * 
+	 * @param String Emplacement id
+	 * @return Evaluation TODO : Change this to ResponseEntity
+	 * 
+	 * @param evaluation
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/evaluer")
+	public Evaluation evaluateEmplacement(@RequestBody Evaluation evaluation, @PathVariable String id,
+			HttpServletRequest request) {
+		if (!emplacementService.emplacementExists(id))
+			return new Evaluation(); // TODO : Should be a 404 with ResponseEntity
+
+		Emplacement emplacement = emplacementService.getEmplacement(id);
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		evaluation.setIdUser(user.getId());
+		evaluation.setEmplacement(emplacement);
+		evaluationService.addEvaluation(evaluation);
+		return evaluation;// TODO : Should be a 404 with ResponseEntity
+	}
+
+	/**
+	 * Get Emplacement by Categorie Id
+	 * 
+	 * @param
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/categorie/{categorieId}/{radius}/{position}")
+	public ArrayList<Emplacement> getEmplacementsByCategorie(@PathVariable String categorieId,
+			@PathVariable String radius, @PathVariable String position) {
+		if (emplacementService.emplacementExistsByName(categorieId)) {
+			return emplacementService.getEmplacementsByCategorie(categorieId);
+		}
+		return handleAPICall("category", categorieId, radius, position);
+	}
+
+	/**
+	 * 
+	 * Handle API Call to Get Emplacement from either "query" or "category"
+	 * 
+	 * @param String keyword (query or categorie Id)
+	 * @return ArrayList<Emplacement> an array of Emplacements based on Categorie
+	 */
+	public ArrayList<Emplacement> handleAPICall(String type, String keyword, String radius, String position) {
 		Request request = new Request();
 		try {
-			ArrayList<GenericEmplacement> places = request.getNearbyGenericEmplacements("category",
-					"4bf58dd8d48988d16d941735", "10000", "35.581186,-5.350481");
-			return places;
+			ArrayList<GenericEmplacement> placesFromAPI = request.getNearbyGenericEmplacements(type, keyword, radius,
+					position);
+			ArrayList<Emplacement> emplacements = new ArrayList<>(); // Result Emplacement ArrayList
+
+			for (int i = 0; i < placesFromAPI.size(); i++) {
+				emplacements.add(new Emplacement(placesFromAPI.get(i)));
+				emplacementService.addEmplacement(emplacements.get(i));
+			}
+
+			return emplacements;
 		} catch (JSONException e) {
-			return null;
+			return null;// TODO : return response entity with status code of 500
 		} catch (IOException e) {
-			return null;
+			return null;// TODO : return response entity with status code of 500
 		}
 	}
 }

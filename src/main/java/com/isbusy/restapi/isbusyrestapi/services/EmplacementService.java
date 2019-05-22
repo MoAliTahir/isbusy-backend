@@ -21,7 +21,7 @@ public class EmplacementService {
 	}
 
 	public Emplacement getEmplacement(String id) {
-		return emplacementRepository.findById(id).get();// we can use .orElse(Null) or .orElse(new Topic);
+		return emplacementRepository.findById(id).get();
 	}
 
 	public void addEmplacement(Emplacement e) {
@@ -38,4 +38,27 @@ public class EmplacementService {
 		emplacementRepository.save(e);
 	}
 
+	// Check if Emplacement exists By ID
+	public boolean emplacementExists(String id) {
+		return emplacementRepository.existsById(id);
+	}
+
+	// Check if Emplacement exists byName
+	public boolean emplacementExistsByName(String name) {
+		return emplacementRepository.existsByNomEmplacement(name);
+	}
+
+	// Get Emplacement By Name
+	public ArrayList<Emplacement> getEmplacementsByName(String name) {
+		ArrayList<Emplacement> emplacements = new ArrayList<>();
+		emplacements.addAll(emplacementRepository.findAllByNomEmplacement(name));
+		return emplacements;
+	}
+
+	// Get Emplacement by Categorie
+	public ArrayList<Emplacement> getEmplacementsByCategorie(String categorieId) {
+		ArrayList<Emplacement> emplacements = new ArrayList<>();
+		emplacements.addAll(emplacementRepository.findAllByCategorie(categorieId));
+		return emplacements;
+	}
 }

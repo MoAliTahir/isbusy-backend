@@ -18,25 +18,6 @@ public class GenericEmplacement {
 
     }
 
-    public boolean equals(Object object) {
-        if (this == object)
-            return true;
-        if (!(object instanceof Place))
-            return false;
-        if (!super.equals(object))
-            return false;
-        GenericEmplacement GenericEmplacement = (GenericEmplacement) object;
-        return java.util.Objects.equals(getId(), GenericEmplacement.getId())
-                && java.util.Objects.equals(getLongitude(), GenericEmplacement.getLongitude())
-                && java.util.Objects.equals(getLatitude(), GenericEmplacement.getLatitude())
-                && java.util.Objects.equals(getName(), GenericEmplacement.getName())
-                && java.util.Objects.equals(getCategory(), GenericEmplacement.getCategory());
-    }
-
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getLongitude(), getLatitude(), getName(), getCategory());
-    }
-
     public GenericEmplacement(String id, double longitude, double latitude, String name, String category) {
         this.id = id;
         this.longitude = longitude;
@@ -62,6 +43,10 @@ public class GenericEmplacement {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getNomGenericEmplacement() {
+        return this.nomGenericEmplacement;
     }
 
     public void setNomGenericEmplacement(String nomGenericEmplacement) {

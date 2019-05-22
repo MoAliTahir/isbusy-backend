@@ -20,10 +20,11 @@ public class EvaluationController {
 	private EvaluationService evaluationService;
 
 	// index
-	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/evaluations")
+	// @RequestMapping(method = RequestMethod.GET, value =
+	// "/emplacements/{id}/evaluations")
 	// by default, it is a default request, if we need to use an other methode we
 	// have specify it !
-	public List<Evaluation> getAllEvaluations(@PathVariable long id) {
+	public List<Evaluation> getAllEvaluations(@PathVariable String id) {
 		System.out.println("index");
 		// as we have annotated this as a RestController the list returned
 		// is automatically converted to JSon, daaaaamn !
