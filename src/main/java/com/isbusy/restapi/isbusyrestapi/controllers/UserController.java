@@ -3,7 +3,9 @@ package com.isbusy.restapi.isbusyrestapi.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,11 +24,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 public class UserController {
-	@ExceptionHandler(ResourceNotFoundException.class)
+	/*@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public String handleResourceNotFoundException() {
 		return "user/notfound";
-	}
+	}*/
 
 	// injecting the TopicService singleton
 	@Autowired
@@ -34,59 +36,106 @@ public class UserController {
 
 	// index
 	@PreAuthorize("hasRole('ADMIN')")
-
-	@RequestMapping("/admin/users")
-	// by default, it is a default request, if we need to use an other methode we
-	// have specify it !
-	public List<User> getAllUsers() {
-		// as we have annotated this as a RestController the list returned
-		// is automatically converted to JSon, daaaaamn !
-		return userService.getAllUsers();
+	@RequestMapping("/users")
+	public ResponseEntity<List> getAllUsers() {
+		HttpHeaders headers = new HttpHeaders();
+		if (userService.getAllUsers() == null){
+			//String body = "No users found";
+			headers.add("Status", "404");
+			headers.add("Message", "No users found");
+			return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);}
+		else{
+		//userService.getAllUsers();
+		headers.add("Status", "404");
+		headers.add("Message", "Users found");
+		return new ResponseEntity<>(userService.getAllUsers(),headers, HttpStatus.OK);}
 	}
 
-	// show
-
-	@RequestMapping("/users/me")
-	public Object getCurrentUser() {
-
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		return auth.getPrincipal();}
-
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping("/users/{id}")
-	public User getUser(@PathVariable long id) {
-
-		if (!userService.userExists(id))
-			throw new ResourceNotFoundException();
+	public ResponseEntity<User> getUser(@PathVariable long id) {
+		HttpHeaders headers = new HttpHeaders();
+		if (!userService.userExists(id)){
+			headers.add("Status", "404");
+			headers.add("Message", "User not found");
+			return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);}
 		else
-			return userService.getUser(id);
+		headers.add("Status", "404");
+		headers.add("Message", "Users found");
+		return new ResponseEntity<>(userService.getUser(id),headers, HttpStatus.OK);
 	}
+/*	public List<User> getAllUsers() {
+		return userService.getAllUsers();
+	}*/
+	@RequestMapping("/users/me")
+	public ResponseEntity<Object> getCurrentUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		HttpHeaders headers = new HttpHeaders();
+		if (auth.getPrincipal() == null){
+			//String body = "No users found";
+			headers.add("Status", "404");
+			headers.add("Message", "User Not found");
+			return new ResponseEntity<>(headers, HttpStatus.NOT_FOUND);}
+		else{
+			headers.add("Status", "200");
+			headers.add("Messgae", "User found");
+		return new ResponseEntity<>(auth.getPrincipal(),headers, HttpStatus.OK);}
+}
+
 
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
-	public String login() {
-		return "Loged IN";
-	}
-
-	// TODO : make public
-	// create
-
-	@RequestMapping(method = RequestMethod.POST, value = "/users/create")
-	public void addUser(@RequestBody User user) {
+	public ResponseEntity<String> login() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Status", "200");
+		headers.add("Message", "Logged successfully");
+		return new ResponseEntity<>("Logged Successfully",headers, HttpStatus.OK);
+	}	
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/users/register")
+	public ResponseEntity<User> addUser(@RequestBody User user) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Status", "200");
+		headers.add("Message", "User Created successfully");
 		userService.addUser(user);
+		return new ResponseEntity<>(headers, HttpStatus.OK);
+
 	}
 
 	// modifier
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/users/update/{id}")
-	public void updateUser(@RequestBody User user, @PathVariable long id) {
+	@RequestMapping(method = RequestMethod.PUT, value = "/users/update")
+	public ResponseEntity<User> updateUser(@RequestBody User user) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
+		long currentId = currentUser.getId();
+		HttpHeaders headers = new HttpHeaders();
+		if(user.getId() != currentId){
+			headers.add("Status", "404");
+			headers.add("Message", "You can't update this user");
+			return new ResponseEntity<>(user, headers, HttpStatus.FORBIDDEN);
+		}
+		else
+		headers.add("Status", "200");
+		headers.add("Message", "User Updated successfully");
 		userService.updateUser(user);
+		return new ResponseEntity<>(user,headers, HttpStatus.OK);
+
 	}
 
 	// suppprimer
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/users/delete/{id}")
-	public void deleteUser(@PathVariable long id) {
-		userService.deleteUser(id);
+	@RequestMapping(method = RequestMethod.DELETE, value = "/users/delete")
+	public ResponseEntity<String> deleteUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
+		long currentId = currentUser.getId();
+		HttpHeaders headers = new HttpHeaders();
+			headers.add("Status", "200");
+		headers.add("Message", "User Deleted successfully");
+		SecurityContextHolder.getContext().setAuthentication(null);
+		userService.deleteUser(currentId);
+		return new ResponseEntity<>("User deleted",headers, HttpStatus.OK);
+
 	}
 
 }
