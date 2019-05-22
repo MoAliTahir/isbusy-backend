@@ -38,6 +38,15 @@ public class Emplacement implements Serializable {
 		this.categorie = category;
 	}
 
+	public Emplacement(GenericEmplacement ge) {
+		this.id = ge.id;
+		this.nomEmplacement = ge.nomGenericEmplacement;
+		this.categorie = ge.categorie;
+		this.latitude = ge.latitude;
+		this.longitude = ge.longitude;
+		this.status = 1;
+	}
+
 	public Emplacement() {
 	}
 

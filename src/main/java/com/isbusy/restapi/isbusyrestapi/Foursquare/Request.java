@@ -17,13 +17,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import com.isbusy.restapi.isbusyrestapi.JSON.*; // package used for general purpose JSON handling
-import com.isbusy.restapi.isbusyrestapi.services.EmplacementService;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
+import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 
 public class Request {
-    @Autowired
-    private EmplacementService emplacementService;
 
     // Constants used to authenticate connection using Foursquare API
 
@@ -161,47 +157,48 @@ public class Request {
         return json;
     }
 
-    // Function responsible for Parsing JSONObject into a Place
+    // Function responsible for Parsing JSONObject into a GenericEmplacement
 
-    private Emplacement setEmplacementAttributes(Object o) throws JSONException {
+    private GenericEmplacement setGenericEmplacementAttributes(Object o) throws JSONException {
 
-        JSONObject EmplacementJson = (JSONObject) o;
-        String name = EmplacementJson.getString("name");
-        String id = EmplacementJson.getString("id");
-        JSONObject location = EmplacementJson.getJSONObject("location");
+        JSONObject GenericEmplacementJson = (JSONObject) o;
+        String name = GenericEmplacementJson.getString("name");
+        String id = GenericEmplacementJson.getString("id");
+        JSONObject location = GenericEmplacementJson.getJSONObject("location");
         Double longitude = location.getDouble("lng");
         Double latitude = location.getDouble("lat");
         String category = null;
-        for (Object oo : EmplacementJson.getJSONArray("categories")) {
+        for (Object oo : GenericEmplacementJson.getJSONArray("categories")) {
             JSONObject categoryJSON = (JSONObject) oo;
             if (categoryJSON.getBoolean("primary")) {
                 category = categoryJSON.getString("name");
             }
         }
-        // TODO : Change this constructor to take actual emplacement id as param
-        Emplacement Emplacement = new Emplacement("555ds", longitude, latitude, name, category);
-        return Emplacement;
+        GenericEmplacement GenericEmplacement = new GenericEmplacement(id, longitude, latitude, name, category);
+        return GenericEmplacement;
     }
 
-    // Function used in search for multiple Emplacements nearby, uses previous
-    // function
-    // to produce an ArrayList of Emplacements
+    // Function used in search for multiple GenericEmplacements nearby, uses
+    // previous function
+    // to produce an ArrayList of GenericEmplacements
 
-    private ArrayList<Emplacement> getEmplacementsFromJson(JSONObject response) throws IOException, JSONException {
+    private ArrayList<GenericEmplacement> getGenericEmplacementsFromJson(JSONObject response)
+            throws IOException, JSONException {
 
-        ArrayList<Emplacement> Emplacements = new ArrayList<Emplacement>();
+        ArrayList<GenericEmplacement> GenericEmplacements = new ArrayList<GenericEmplacement>();
         JSONObject json = response.getJSONObject("response");
         JSONArray jsonArray = json.getJSONArray("venues");
         for (Object o : jsonArray) {
-            Emplacements.add(setEmplacementAttributes(o));
+            GenericEmplacements.add(setGenericEmplacementAttributes(o));
         }
-        return Emplacements;
+        System.out.println("======================" + GenericEmplacements.get(1).getId() + "======================");
+        return GenericEmplacements;
     }
 
     // Similar to previous function but only useful in cases where response is only
-    // one Emplacement
+    // one GenericEmplacement
 
-    private Emplacement getEmplacementFromJson(JSONObject response) throws IOException, JSONException {
+    private GenericEmplacement getGenericEmplacementFromJson(JSONObject response) throws IOException, JSONException {
 
         JSONObject json = response.getJSONObject("response");
         if (json.has("venue")) {
@@ -211,21 +208,21 @@ public class Request {
                 json = (JSONObject) o;
             }
         }
-        return setEmplacementAttributes(json);
+        return setGenericEmplacementAttributes(json);
     }
 
     /*
      * the following functions are the public methods, they use all previous private
      * methods in order to deliver the desired functionality, be it: - Search by
-     * Emplacement name. - Search by Emplacement category ID. - Getting Emplacement
-     * details from Emplacement ID. - Adding new Emplacements in Foursquare
-     * Database.
+     * GenericEmplacement name. - Search by GenericEmplacement category ID. -
+     * Getting GenericEmplacement details from GenericEmplacement ID. - Adding new
+     * GenericEmplacements in Foursquare Database.
      */
 
     // Search function, by either Name or Category
 
-    public ArrayList<Emplacement> getNearbyEmplacements(String option, String queryOrCategoryID, String radius,
-            String location) throws IOException, JSONException {
+    public ArrayList<GenericEmplacement> getNearbyGenericEmplacements(String option, String queryOrCategoryID,
+            String radius, String location) throws IOException, JSONException {
 
         String opt = null;
         if (option == "category") {
@@ -237,22 +234,22 @@ public class Request {
         }
         this.radius = radius;
         this.location = location;
-        return this.getEmplacementsFromJson(readJsonFromResponse(urlBuilder(opt), null, "GET"));
+        return this.getGenericEmplacementsFromJson(readJsonFromResponse(urlBuilder(opt), null, "GET"));
     }
 
     // Get palce details by ID
 
-    public Emplacement getEmplacementDetails(String id) throws IOException, JSONException {
+    public GenericEmplacement getGenericEmplacementDetails(String id) throws IOException, JSONException {
 
-        return this.getEmplacementFromJson(readJsonFromResponse(urlBuilder(id), null, "GET"));
+        return this.getGenericEmplacementFromJson(readJsonFromResponse(urlBuilder(id), null, "GET"));
     }
 
-    // Create a new Emplacement in Foursquare Database
+    // Create a new GenericEmplacement in Foursquare Database
 
-    public Emplacement createNewEmplacement(String name, String location, String categoryID)
+    public GenericEmplacement createNewGenericEmplacement(String name, String location, String categoryID)
             throws IOException, JSONException {
 
-        return this.getEmplacementFromJson(readJsonFromResponse(urlBuilder("add"), DATA + "&name=" + name + "&ll="
-                + location + "&primaryCategoryId=" + categoryID + "&oauth_token=" + OAUTH, "POST"));
+        return this.getGenericEmplacementFromJson(readJsonFromResponse(urlBuilder("add"), DATA + "&name=" + name
+                + "&ll=" + location + "&primaryCategoryId=" + categoryID + "&oauth_token=" + OAUTH, "POST"));
     }
 }
