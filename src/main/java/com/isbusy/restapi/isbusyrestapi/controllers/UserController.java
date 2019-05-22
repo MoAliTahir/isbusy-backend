@@ -35,6 +35,7 @@ public class UserController {
 	private UserService userService;
 
 	// index
+	@CrossOrigin
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping("/users")
 	public ResponseEntity<List> getAllUsers() {
@@ -50,7 +51,8 @@ public class UserController {
 		headers.add("Message", "Users found");
 		return new ResponseEntity<>(userService.getAllUsers(),headers, HttpStatus.OK);}
 	}
-
+	
+	@CrossOrigin
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping("/users/{id}")
 	public ResponseEntity<User> getUser(@PathVariable long id) {
@@ -67,6 +69,7 @@ public class UserController {
 /*	public List<User> getAllUsers() {
 		return userService.getAllUsers();
 	}*/
+	@CrossOrigin
 	@RequestMapping("/users/me")
 	public ResponseEntity<Object> getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -82,7 +85,7 @@ public class UserController {
 		return new ResponseEntity<>(auth.getPrincipal(),headers, HttpStatus.OK);}
 }
 
-
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.POST, value = "/login")
 	public ResponseEntity<String> login() {
 		HttpHeaders headers = new HttpHeaders();
@@ -91,6 +94,7 @@ public class UserController {
 		return new ResponseEntity<>("Logged Successfully",headers, HttpStatus.OK);
 	}	
 	
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.POST, value = "/users/register")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
 		HttpHeaders headers = new HttpHeaders();
@@ -102,7 +106,7 @@ public class UserController {
 	}
 
 	// modifier
-
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.PUT, value = "/users/update")
 	public ResponseEntity<User> updateUser(@RequestBody User user) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -123,7 +127,7 @@ public class UserController {
 	}
 
 	// suppprimer
-
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.DELETE, value = "/users/delete")
 	public ResponseEntity<String> deleteUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
