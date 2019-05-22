@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
 import com.isbusy.restapi.isbusyrestapi.entities.Evaluation;
@@ -31,7 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
 public class CategorieController {
-
+    // TODO : Add Response Entity
     /**
      * @var CategorieService singleton
      */
@@ -68,4 +69,35 @@ public class CategorieController {
             return new Categorie(); // TODO : Should be changed to ResponseEntity
         return categorieService.getByName(name);
     }
+
+    /**
+     * Create new Categorie -- TODO : Add Response Entity
+     * 
+     * @param Categorie
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/categories/add")
+    public Categorie addCategorie(@RequestBody Categorie categorie) {
+        if (categorieService.addCategorie(categorie))
+            return categorie;
+        return new Categorie(); // TODO : Return Category does not exists in Response Entity
+    }
+
+    /**
+     * Update Categorie - TODO : fix bug when id
+     * 
+     * @param Categorie
+     */
+    @RequestMapping(method = RequestMethod.PATCH, value = "/categories/{id}/update")
+    public Categorie updateCategorie(@PathVariable String id, @RequestBody Categorie c) {
+        if (!id.equals(c.getId()))
+            return new Categorie(); // TODO : Ths should be a 400 error : bad request(id in route and Categorie id
+                                    // do not match)
+
+        if (!categorieService.updateCategorie(id, c)) {
+            // TODO Categorie not found 404 => return error in Response Entity
+            return new Categorie();
+        }
+        categorieService.updateCategorie(id, c);
+        return new Categorie(c); // TODO All ok 200
+        }
 }

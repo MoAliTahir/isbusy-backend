@@ -35,4 +35,19 @@ public class CategorieService {
     public Categorie getByName(String name) {
         return categorieRepository.findByName(name).get();
     }
+
+    public boolean addCategorie(Categorie c) {
+        if (!categorieExists(c.getId())) {
+            categorieRepository.save(c);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateCategorie(String id, Categorie c) {
+        if (!categorieExists(id))
+            return false;
+        categorieRepository.save(c);
+        return true;
+    }
 }
