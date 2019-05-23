@@ -26,6 +26,7 @@ import com.isbusy.restapi.isbusyrestapi.services.EmplacementService;
 import com.isbusy.restapi.isbusyrestapi.services.EvaluationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 public class EmplacementController {
@@ -154,7 +155,6 @@ public class EmplacementController {
 	}
 
 	/**
-	 * 
 	 * Handle API Call to Get Emplacement from either "query" or "category"
 	 * 
 	 * @param String keyword (query or categorie Id)
@@ -178,5 +178,52 @@ public class EmplacementController {
 		} catch (IOException e) {
 			return null;// TODO : return response entity with status code of 500
 		}
+	}
+
+	/**
+	 * Get all inactive Emplacement Requires Admin Role TODO : Add Response Entity
+	 * Requires Admin Role
+	 * 
+	 * @return ArrayList<Emplacement>
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/pending")
+	public ArrayList<Emplacement> getInactiveEmplacements() {
+		return emplacementService.getInactiveEmplacements();
+	}
+
+	/**
+	 * Approve a Pending Emplacement i.e Suggest it to Foursquare API (Switch status
+	 * from 0 to 2) Requires Admin Role
+	 * 
+	 * @param String Emplacement id to approve
+	 * 
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(method = RequestMethod.PATCH, value = "/emplacements/{id}/approve")
+	public Emplacement approvePendingEmplacement(@PathVariable String id) {
+		if (!emplacementService.emplacementExists(id))
+			return new Emplacement();// TODO : Return Response Entity with not 404 found message
+		boolean updated = emplacementService.approveEmplacement(id);
+		if (!updated)
+			return new Emplacement();// TODO: Return 500 Internal server error(Can also be 400 Bad request)
+		return emplacementService.getEmplacement(id);// TODO return Response entity with 200 Status code
+	}
+
+	/**
+	 * Ignore an Emplacement (Switch status from 0 to 1) Requires Admin Role
+	 * 
+	 * @param String Emplacement id to approve
+	 * 
+	 */
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(method = RequestMethod.PATCH, value = "/emplacements/{id}/ignore")
+	public Emplacement ignorePendingEmplacement(@PathVariable String id) {
+		if (!emplacementService.emplacementExists(id))
+			return new Emplacement();// TODO : Return Response Entity with not 404 found message
+		boolean ignored = emplacementService.ignoreEmplacement(id);
+		if (!ignored)
+			return new Emplacement();// TODO: Return 500 Internal server error(Can also be 400 Bad request)
+		return emplacementService.getEmplacement(id);// Todo return Respons entity with 200 Status code
 	}
 }
