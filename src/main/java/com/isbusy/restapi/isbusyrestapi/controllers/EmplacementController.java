@@ -229,7 +229,8 @@ public class EmplacementController {
 	}
 
 	/**
-	 * Testing Emplacement Stat
+	 * Get An Emplacement statistic in a specific day (All computations are done in
+	 * emplacement service)
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/{jour}")
 	public HashMap<Integer, Integer> getEmplacementStat(@PathVariable String id, @PathVariable String jour) {
