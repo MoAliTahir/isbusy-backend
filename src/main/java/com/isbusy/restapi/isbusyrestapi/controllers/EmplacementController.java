@@ -226,4 +226,15 @@ public class EmplacementController {
 			return new Emplacement();// TODO: Return 500 Internal server error(Can also be 400 Bad request)
 		return emplacementService.getEmplacement(id);// Todo return Respons entity with 200 Status code
 	}
+
+	/**
+	 * Testing Emplacement Stat
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/stat")
+	public void getEmplacementStat(@PathVariable String id) {
+		// Get evaluations associated to this emplacement
+		if (!emplacementService.emplacementExists(id))
+			return;
+
+	}
 }
