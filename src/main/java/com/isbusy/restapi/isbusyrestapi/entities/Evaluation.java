@@ -14,20 +14,28 @@ import javax.persistence.TemporalType;
 @Entity
 public class Evaluation implements Serializable {
 	/**
-	 * 
+	 * @var Final Wight Values
 	 */
+	public static final double WEIGHT_FERME = 343 / 25;
+	public static final double WEIGHT_PLEIN = 49 / 5;
+	public static final double WEIGHT_MOYEN = 7;
+	public static final double WEIGHT_VIDE = 5;
+
+	public static final double FERME = 3;
+	public static final double PLEIN = 2;
+	public static final double MOYEN = 1;
+	public static final double VIDE = 0;
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private int vote;
 	private long idUser;
-	private String titre;
 	private String description;
 	@ManyToOne
 	private Emplacement emplacement;
-	@Temporal(TemporalType.DATE)
-	private Date date;
+	private String jour;
 	private int heure;
 
 	public int getVote() {
@@ -38,12 +46,12 @@ public class Evaluation implements Serializable {
 		this.vote = vote;
 	}
 
-	public Date getDate() {
-		return date;
+	public String getJour() {
+		return jour;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setJour(String jour) {
+		this.jour = jour;
 	}
 
 	public int getHeure() {
@@ -53,7 +61,6 @@ public class Evaluation implements Serializable {
 	public void setHeure(int heure) {
 		this.heure = heure;
 	}
-	//////////////////
 
 	public long getId() {
 		return id;
@@ -69,14 +76,6 @@ public class Evaluation implements Serializable {
 
 	public void setIdUser(long idUser) {
 		this.idUser = idUser;
-	}
-
-	public String getTitre() {
-		return titre;
-	}
-
-	public void setTitre(String titre) {
-		this.titre = titre;
 	}
 
 	public String getDescription() {
@@ -95,4 +94,18 @@ public class Evaluation implements Serializable {
 		this.emplacement = emplacement;
 	}
 
+	/**
+	 * Weight Mapper : Maps vote value
+	 */
+	public double weightMapper() {
+		int vote = getVote();
+		if (vote == FERME)
+			return WEIGHT_FERME;
+		else if (vote == PLEIN)
+			return WEIGHT_PLEIN;
+		else if (vote == MOYEN)
+			return WEIGHT_MOYEN;
+		else
+			return WEIGHT_VIDE;
+	}
 }

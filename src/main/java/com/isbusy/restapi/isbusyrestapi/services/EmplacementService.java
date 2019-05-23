@@ -61,4 +61,32 @@ public class EmplacementService {
 		emplacements.addAll(emplacementRepository.findAllByCategorie(categorieId));
 		return emplacements;
 	}
+
+	// Get Inactive Emplacements
+	public ArrayList<Emplacement> getInactiveEmplacements() {
+		ArrayList<Emplacement> places = new ArrayList<Emplacement>();
+		places.addAll(emplacementRepository.findAllByStatus(Emplacement.PENDING_STATUS));
+		return places;
+	}
+
+	// Approve pending Emplacement (Status from 0 to 2)
+	public boolean approveEmplacement(String id) {
+		Emplacement emplacement = getEmplacement(id);
+		if (emplacement.getStatus() != Emplacement.PENDING_STATUS)
+			return false;
+		emplacement.setStatus(Emplacement.APPROVED_STATUS);
+		emplacementRepository.save(emplacement);
+		return true;
+	}
+
+	// Ignore Emplacement
+	public boolean ignoreEmplacement(String id) {
+		Emplacement emplacement = getEmplacement(id);
+		if (emplacement.getStatus() != Emplacement.PENDING_STATUS)
+			return false;
+		emplacement.setStatus(Emplacement.IGNORED_STATUS);
+		emplacementRepository.save(emplacement);
+		return true;
+	}
+
 }
