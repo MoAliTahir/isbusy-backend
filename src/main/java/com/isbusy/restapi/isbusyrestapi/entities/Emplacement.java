@@ -1,12 +1,20 @@
 package com.isbusy.restapi.isbusyrestapi.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 
 @Entity
+@Table(name = "emplacement")
+
 public class Emplacement implements Serializable {
 	/**
 	 * 
@@ -19,7 +27,8 @@ public class Emplacement implements Serializable {
 	private double latitude;
 	private double longitude;
 	private int status = 0;
-
+	@OneToMany(mappedBy = "emplacement" , cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+	private Set<Emplacement> emplacement;
 	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
 			int status) {
 		super();
