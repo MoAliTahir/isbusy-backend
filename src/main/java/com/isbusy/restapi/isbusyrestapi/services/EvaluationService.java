@@ -36,4 +36,20 @@ public class EvaluationService {
 	public void deleteEvaluation(long id) {
 		evaluationRepository.deleteById(id);
 	}
+
+	// Get Evaluations by Emplacement Id and Jour
+	public List<Evaluation> findAllByIdEmPlacementAndJour(String emplecementId, String jour) {
+		List<Evaluation> evals = evaluationRepository.findAllByIdEmPlacementAndJour(emplecementId, jour);
+		return evals;
+	}
+
+	// Get Evaluations by Emplacement Id, heure and jour
+	public List<Evaluation> findAllByEmplacementIdAndDayAndHour(String emplacementId, String jour, int heure) {
+		return evaluationRepository.findAllByEmplacementIdAndDayAndHour(emplacementId, jour, heure);
+	}
+
+	// Get Evaluations by Emplacement Id
+	public List<Evaluation> findAllByEmplacementId(String emplacementId) {
+		return evaluationRepository.findByEmplacementId(emplacementId);
+	}
 }

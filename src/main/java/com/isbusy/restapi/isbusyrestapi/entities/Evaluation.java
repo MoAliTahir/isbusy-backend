@@ -108,4 +108,18 @@ public class Evaluation implements Serializable {
 		else
 			return WEIGHT_VIDE;
 	}
+
+	/**
+	 * Vote Mapper : Maps vote value
+	 */
+	public static double voteMapper(double vote) {
+		if (vote >= FERME)
+			return WEIGHT_FERME;
+		else if (vote == PLEIN)
+			return WEIGHT_PLEIN;
+		else if (vote == MOYEN)
+			return WEIGHT_MOYEN;
+		else
+			return WEIGHT_VIDE;
+	}
 }

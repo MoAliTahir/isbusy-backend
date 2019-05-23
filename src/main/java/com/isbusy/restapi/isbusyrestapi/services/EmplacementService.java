@@ -1,16 +1,26 @@
 package com.isbusy.restapi.isbusyrestapi.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
+import com.isbusy.restapi.isbusyrestapi.entities.Evaluation;
 import com.isbusy.restapi.isbusyrestapi.repositories.EmplacementRepository;
+import com.isbusy.restapi.isbusyrestapi.repositories.EvaluationRepository;
 
 @Service
 public class EmplacementService {
+	/**
+	 * Evaluation Service
+	 */
+	@Autowired
+	EvaluationService evaluationService;
+	@Autowired
+	private EvaluationRepository evaluationRepository;
 	@Autowired
 	private EmplacementRepository emplacementRepository;
 
@@ -87,6 +97,40 @@ public class EmplacementService {
 		emplacement.setStatus(Emplacement.IGNORED_STATUS);
 		emplacementRepository.save(emplacement);
 		return true;
+	}
+
+	// Get Emplacement Stat
+	public HashMap<Integer, Integer> getEmplacementStat(String id, String jour) {
+		List<Evaluation> evals = evaluationService.findAllByIdEmPlacementAndJour(id, jour);
+		// HashMap to be returned
+		HashMap<Integer, Integer> stats = new HashMap<Integer, Integer>();
+		for (int i = 0; i < 24; i++) {
+			stats.put(i, weight(id, jour, i));// Init all elements with 0
+		}
+		return stats;
+	}
+
+	public double computeSpecificWeight(double w, String id, String jour, int heure, int vote) {
+		int countEvals = evaluationRepository.getCountByJourAndHeure(id, jour, heure);
+		int totalEvalsByVote = evaluationRepository.getCountByJourAndHeureAndVote(id, jour, heure, vote);
+		return w * totalEvalsByVote / countEvals;
+	}
+
+	public int weight(String id, String jour, int heure) {
+		double[] weights = new double[4];
+		weights[0] = computeSpecificWeight(Evaluation.WEIGHT_VIDE, id, jour, heure, 0);
+		weights[1] = computeSpecificWeight(Evaluation.WEIGHT_MOYEN, id, jour, heure, 1);
+		weights[2] = computeSpecificWeight(Evaluation.WEIGHT_PLEIN, id, jour, heure, 2);
+		weights[3] = computeSpecificWeight(Evaluation.WEIGHT_FERME, id, jour, heure, 3);
+		double max = 0;
+		int index = 0;
+		for (int i = 0; i < weights.length; i++) {
+			if (weights[i] > max) {
+				max = weights[i];
+				index = i;
+			}
+		}
+		return index;
 	}
 
 }

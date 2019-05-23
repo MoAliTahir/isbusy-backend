@@ -1,6 +1,7 @@
 package com.isbusy.restapi.isbusyrestapi.controllers;
 
 import java.util.List;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -230,11 +231,10 @@ public class EmplacementController {
 	/**
 	 * Testing Emplacement Stat
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/stat")
-	public void getEmplacementStat(@PathVariable String id) {
-		// Get evaluations associated to this emplacement
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/{jour}")
+	public HashMap<Integer, Integer> getEmplacementStat(@PathVariable String id, @PathVariable String jour) {
 		if (!emplacementService.emplacementExists(id))
-			return;
-
+			return null; // TODO : Response Entity 404
+		return emplacementService.getEmplacementStat(id, jour);
 	}
 }
