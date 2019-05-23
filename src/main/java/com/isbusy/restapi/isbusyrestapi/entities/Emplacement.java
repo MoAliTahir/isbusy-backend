@@ -31,8 +31,6 @@ public class Emplacement implements Serializable {
 	private double latitude;
 	private double longitude;
 	private int status = PENDING_STATUS;
-	@OneToMany(mappedBy = "emplacement" , cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-	private Set<Emplacement> emplacement;
 	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
 			int status) {
 		super();

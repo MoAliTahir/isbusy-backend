@@ -23,10 +23,6 @@ public class Categorie implements Serializable {
     private String name;
     private String shortName = "";
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(name = "emplacement", 
-                joinColumns = {@JoinColumn(name = "categorie", referencedColumnName = "name")})
-    private Emplacement emplacement;
     // Constructors
     public Categorie() {
 
@@ -36,14 +32,12 @@ public class Categorie implements Serializable {
         setId(id);
         setName(name);
         setShortName(shortName);
-        setEmplacement(emplacement);
     }
 
     public Categorie(Categorie c) {
         setId(c.getId());
         setName(c.getName());
         setShortName(c.getShortName());
-        setEmplacement(c.getEmplacement());
     }
 
     /**
@@ -81,12 +75,4 @@ public class Categorie implements Serializable {
         this.shortName = value;
     }
 
-    public Emplacement getEmplacement() {
-        return this.emplacement;
-    }
-
-    public void setEmplacement(Emplacement emplacement) {
-        this.emplacement = emplacement;
-    }
-    
 }
