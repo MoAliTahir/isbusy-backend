@@ -12,4 +12,6 @@ public interface EmplacementRepository extends CrudRepository<Emplacement, Strin
 
     List<Emplacement> findAllByCategorie(String categorie);
 
+    List<Emplacement> findAllByStatus(int status);
+
 }

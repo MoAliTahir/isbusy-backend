@@ -17,8 +17,12 @@ import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 
 public class Emplacement implements Serializable {
 	/**
-	 * 
+	 * @var Emplacement final status values
 	 */
+	public static final int PENDING_STATUS = 0;
+	public static final int IGNORED_STATUS = 1;
+	public static final int APPROVED_STATUS = 2;
+
 	private static final long serialVersionUID = 1L;
 	@Id
 	private String id;
@@ -26,7 +30,7 @@ public class Emplacement implements Serializable {
 	private String categorie;
 	private double latitude;
 	private double longitude;
-	private int status = 0;
+	private int status = PENDING_STATUS;
 	@OneToMany(mappedBy = "emplacement" , cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	private Set<Emplacement> emplacement;
 	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
@@ -53,7 +57,7 @@ public class Emplacement implements Serializable {
 		this.categorie = ge.getCategorie();
 		this.latitude = ge.getLatitude();
 		this.longitude = ge.getLongitude();
-		this.status = 1; // Active by default because we're getting then from the API
+		this.status = APPROVED_STATUS; // Active by default because we're getting then from the API
 	}
 
 	public Emplacement() {
