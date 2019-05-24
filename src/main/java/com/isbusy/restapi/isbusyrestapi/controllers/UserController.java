@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
 import com.isbusy.restapi.isbusyrestapi.entities.Role;
 import com.isbusy.restapi.isbusyrestapi.responses.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import com.isbusy.restapi.isbusyrestapi.services.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-public class UserController {
+public class UserController<Favorie> {
 
 	// injecting the TopicService singleton
 	@Autowired
@@ -174,5 +175,12 @@ public class UserController {
 		return ResponseEntity.ok().headers(headers).body(new UserResponse("User Deleted successfully", 200));
 
 	}
-
+	// Favoris
+	@RequestMapping(method = RequestMethod.GET, value = "/favories")
+	public ArrayList<Emplacement> getAllFavoris() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
+		long currentId = currentUser.getId();
+		return userService.getAllFavoris(currentId);
+	}
 }

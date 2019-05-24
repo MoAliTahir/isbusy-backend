@@ -6,13 +6,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
 import com.isbusy.restapi.isbusyrestapi.entities.User;
 import com.isbusy.restapi.isbusyrestapi.repositories.UserRepository;
+import com.isbusy.restapi.isbusyrestapi.repositories.EmplacementRepository;
 
 @Service
-public class UserService {
+public class UserService<Favorie> {
 	@Autowired
 	private UserRepository userRepository; 
+	@Autowired
+	private EmplacementRepository emplacementRepository;
 	
 	
 	public List<User> getAllUsers() {
@@ -40,5 +44,14 @@ public class UserService {
 
 	public boolean userExists(Long id){
 		return userRepository.existsById(id);
+	}
+
+
+	public ArrayList<Emplacement> getAllFavoris(long userId) {
+		ArrayList<Emplacement> favoris = new ArrayList<>();
+
+		List<Emplacement> e = emplacementRepository.findFavoris(userId);
+		favoris.addAll(e);
+		return favoris;
 	}
 }
