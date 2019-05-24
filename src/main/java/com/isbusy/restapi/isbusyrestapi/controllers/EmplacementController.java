@@ -190,8 +190,7 @@ public class EmplacementController {
 	}
 
 	/**
-	 * Get all inactive Emplacement Requires Admin Role TODO : Add Response Entity
-	 * Requires Admin Role
+	 * Get all pending Emplacement Requires Admin Role Requires Admin Role
 	 * 
 	 * @return ArrayList<Emplacement>
 	 */
@@ -253,8 +252,8 @@ public class EmplacementController {
 		if (!emplacementService.emplacementExists(id))
 			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
 		Emplacement emplacement = emplacementService.getEmplacement(id);
-		return handleStatResponse(null, emplacementService.getEmplacementStat(id, jour),
-				"Statistiques de :" + emplacement.getId() + " du jour " + jour + ".", HttpStatus.OK);
+		return handleStatResponse(emplacement, emplacementService.getEmplacementStat(id, jour),
+				"Statistiques de: " + emplacement.getId() + " du jour " + jour + ".", HttpStatus.OK);
 	}
 
 	/**
