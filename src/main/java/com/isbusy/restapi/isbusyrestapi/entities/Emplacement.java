@@ -1,13 +1,16 @@
 package com.isbusy.restapi.isbusyrestapi.entities;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
@@ -25,12 +28,26 @@ public class Emplacement implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
+	@GeneratedValue
 	private String id;
 	private String nomEmplacement;
 	private String categorie;
 	private double latitude;
 	private double longitude;
 	private int status = PENDING_STATUS;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@JoinTable(name = "favoris", joinColumns = {@JoinColumn(name = "emplacement_id", referencedColumnName = "id") }, 
+								inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id") })
+	private List<User> users;
+
+	public List<User> getUsers() {
+		return this.users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
 	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
 			int status) {
 		super();
