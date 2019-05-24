@@ -174,26 +174,6 @@ public class UserController<Favorie> {
 
 	}
 
-	// Favoris
-	@RequestMapping(method = RequestMethod.GET, value = "/favories")
-	public ArrayList<Emplacement> getAllFavoris() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User currentUser = (User) auth.getPrincipal();
-		long currentId = currentUser.getId();
-		return userService.getAllFavoris(currentId);
-	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/favories/add/{id}")
-	public void addFavoris(@PathVariable String id) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User currentUser = (User) auth.getPrincipal();
-		long currentId = currentUser.getId();
-		userService.addFavoris(id, currentId);
-	}
-
-	@RequestMapping(method = RequestMethod.DELETE, value = "/favories/delete/{id}")
-	public void deleteFavoris(@PathVariable String id) {
-		userService.deleteFavoris(id);
-	}
 
 }

@@ -7,13 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.isbusy.restapi.isbusyrestapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
 import com.isbusy.restapi.isbusyrestapi.responses.EmplacementResponse;
@@ -39,6 +37,9 @@ public class EmplacementController {
 	 * TODO 1. Add ResponseEntity Method to this Controller 2. Configure Methods to
 	 * return Response Entity
 	 */
+
+	@Autowired
+	private UserService userService;
 
 	/**
 	 * @var EvaluationService Singleton
@@ -100,6 +101,7 @@ public class EmplacementController {
 	/**
 	 * Get all Emplacements from DB
 	 */
+	@CrossOrigin
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/")
 	public ResponseEntity<EmplacementResponse> getAllEmplacements() {
 		ArrayList<Emplacement> emplacements = new ArrayList<>();
@@ -255,6 +257,35 @@ public class EmplacementController {
 		return handleStatResponse(emplacement, emplacementService.getEmplacementStat(id, jour),
 				"Statistiques de: " + emplacement.getId() + " du jour " + jour + ".", HttpStatus.OK);
 	}
+
+
+	// Favoris
+	@RequestMapping(method = RequestMethod.GET, value = "/favories")
+	public ResponseEntity<EmplacementResponse> getAllFavoris() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
+		long currentId = currentUser.getId();
+		return handleResponse(null, userService.getAllFavoris(currentId),"Liste des favories de "+currentUser.getUsername(), HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/favories/add/{id}")
+	public ResponseEntity<EmplacementResponse> addFavoris(@PathVariable String id) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
+		long currentId = currentUser.getId();
+		userService.addFavoris(id, currentId);
+		return handleResponse(emplacementService.getEmplacement(id),null, "Emplacement ajouté aux favories avec succes", HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/favories/delete/{id}")
+	public ResponseEntity<EmplacementResponse> deleteFavoris(@PathVariable String id) {
+		userService.deleteFavoris(id);
+		return handleResponse(null, null, "Emplacement supprimé de votre liste de favories ", HttpStatus.OK);
+	}
+
+
+
+
 
 	/**
 	 * Response Entity used to handle HTTP response headers and body when
