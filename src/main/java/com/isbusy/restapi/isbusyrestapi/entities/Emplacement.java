@@ -34,6 +34,7 @@ public class Emplacement implements Serializable {
 	private double latitude;
 	private double longitude;
 	private int status = PENDING_STATUS;
+	private int vote = 4;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinTable(name = "favoris", joinColumns = {
 			@JoinColumn(name = "emplacement_id", referencedColumnName = "id") }, inverseJoinColumns = {
@@ -57,6 +58,17 @@ public class Emplacement implements Serializable {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.status = status;
+	}
+	public Emplacement(String idEmplacement, String nomEmplacement, String categorie, float latitude, float longitude,
+			int status, int vote) {
+		super();
+		this.id = idEmplacement;
+		this.nomEmplacement = nomEmplacement;
+		this.categorie = categorie;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.status = status;
+		this.vote = vote;
 	}
 
 	public Emplacement(String id, double longitude, double latitude, String name, String category) {
@@ -128,4 +140,11 @@ public class Emplacement implements Serializable {
 		this.longitude = longitude;
 	}
 
+	public int getVote() {
+		return vote;
+	}
+
+	public void setVote(int vote) {
+		this.vote = vote;
+	}
 }

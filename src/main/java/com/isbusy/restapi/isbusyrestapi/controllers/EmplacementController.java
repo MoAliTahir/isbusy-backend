@@ -161,6 +161,8 @@ public class EmplacementController {
 		evaluation.setIdUser(user.getId());
 		evaluation.setEmplacement(emplacement);
 		evaluationService.addEvaluation(evaluation);
+		emplacement.setVote(evaluation.getVote());
+		emplacementService.updateEmplacement(emplacement.getId(), emplacement);
 		return EvaluationController.handleResponse(evaluation, evaluationService.getAllEvaluations(id),
 				"Votre evaluation a ete ajoutee avec succes !", HttpStatus.OK);
 	}
