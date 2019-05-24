@@ -1,6 +1,7 @@
 package com.isbusy.restapi.isbusyrestapi.controllers;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
 import com.isbusy.restapi.isbusyrestapi.entities.Evaluation;
 import com.isbusy.restapi.isbusyrestapi.services.EvaluationService;
+import com.isbusy.restapi.isbusyrestapi.responses.EvaluationResponse;
 
 @RestController
 public class EvaluationController {
@@ -48,6 +52,21 @@ public class EvaluationController {
 	public void deleteCourse(@PathVariable long id) {
 		System.out.println("DELETE");
 		evaluationService.deleteEvaluation(id);
+	}
+
+	/**
+	 * Evaluation Response Entity used to handle HTTP response headers and body
+	 * 
+	 * @param
+	 */
+	public static ResponseEntity<EvaluationResponse> handleResponse(Evaluation evaluation,
+			ArrayList<Evaluation> evaluations, String message, HttpStatus statusCode) {
+		HttpHeaders headers = new HttpHeaders();
+		int status = statusCode.value();
+		headers.add("status", String.valueOf(statusCode));
+		headers.add("message", message);
+		return ResponseEntity.status(status).headers(headers)
+				.body(new EvaluationResponse(evaluation, evaluations, message, status));
 	}
 
 }

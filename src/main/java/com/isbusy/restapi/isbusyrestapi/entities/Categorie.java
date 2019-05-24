@@ -18,8 +18,8 @@ import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 public class Categorie implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private String id;
     @Id
+    private String id;
     private String name;
     private String shortName = "";
 

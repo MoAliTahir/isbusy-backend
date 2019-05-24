@@ -28,7 +28,6 @@ public class Emplacement implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue
 	private String id;
 	private String nomEmplacement;
 	private String categorie;
@@ -36,8 +35,9 @@ public class Emplacement implements Serializable {
 	private double longitude;
 	private int status = PENDING_STATUS;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-	@JoinTable(name = "favoris", joinColumns = {@JoinColumn(name = "emplacement_id", referencedColumnName = "id") }, 
-								inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id") })
+	@JoinTable(name = "favoris", joinColumns = {
+			@JoinColumn(name = "emplacement_id", referencedColumnName = "id") }, inverseJoinColumns = {
+					@JoinColumn(name = "user_id", referencedColumnName = "id") })
 	private List<User> users;
 
 	public List<User> getUsers() {

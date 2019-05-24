@@ -1,12 +1,10 @@
 package com.isbusy.restapi.isbusyrestapi.controllers;
 
-import java.util.List;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +16,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
+import com.isbusy.restapi.isbusyrestapi.responses.EmplacementResponse;
+import com.isbusy.restapi.isbusyrestapi.responses.EvaluationResponse;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+
 import com.isbusy.restapi.isbusyrestapi.entities.Evaluation;
 import com.isbusy.restapi.isbusyrestapi.entities.User;
+import com.isbusy.restapi.isbusyrestapi.controllers.EvaluationController;
 import com.isbusy.restapi.isbusyrestapi.Classes.GenericEmplacement;
 import com.isbusy.restapi.isbusyrestapi.Foursquare.Request;
 import com.isbusy.restapi.isbusyrestapi.JSON.JSONException;
 import com.isbusy.restapi.isbusyrestapi.services.EmplacementService;
 import com.isbusy.restapi.isbusyrestapi.services.EvaluationService;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -49,16 +53,15 @@ public class EmplacementController {
 	private EmplacementService emplacementService;
 
 	/**
-	 * Get Emplacement by ID from DB TODO : Return 404 if not found (With Response
-	 * Entity)
+	 * Get Emplacement by ID from DB
 	 * 
 	 * @return Emplacement
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}")
-	public Emplacement getEmplacementById(@PathVariable String id) {
+	public ResponseEntity<EmplacementResponse> getEmplacementById(@PathVariable String id) {
 		if (emplacementService.emplacementExists(id))
-			return emplacementService.getEmplacement(id);
-		return null;// TODO : This should be a ResponseEntity with 404 status code
+			return handleResponse(emplacementService.getEmplacement(id), null, "Emplacement trouve !", HttpStatus.OK);
+		return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -71,74 +74,15 @@ public class EmplacementController {
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/query/{name}/{radius}/{position}")
-	public ArrayList<Emplacement> getEmplacementByName(@PathVariable String name, @PathVariable String radius,
-			@PathVariable String position) {
+	public ResponseEntity<EmplacementResponse> getEmplacementByName(@PathVariable String name,
+			@PathVariable String radius, @PathVariable String position) {
 
 		if (emplacementService.emplacementExistsByName(name)) {
-			// Emplacements already found in DB, so just return them
-			return emplacementService.getEmplacementsByName(name);
+			return handleResponse(null, emplacementService.getEmplacementsByName(name),
+					"Emplacements trouves par nom: " + name + " et position: " + position + ".", HttpStatus.OK);
 		}
-		return handleAPICall("query", name, radius, position);
-
-	}
-
-	/**
-	 * Get all Emplacements from DB TODO : Add Response Entity
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/")
-	public List<Emplacement> getAllEmplacements() {
-		return emplacementService.getAllEmplacements();
-	}
-
-	/**
-	 * Add new Emplacement TODO : Add ResponseEntity
-	 * 
-	 * @param Emplacement
-	 * @return Emplacement
-	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/add")
-	public Emplacement addEmplacement(@RequestBody Emplacement emplacement) {
-		emplacementService.addEmplacement(emplacement);
-		return emplacement;
-	}
-
-	/**
-	 * Get all Evaluations for an Emplacement TODO : Implement ResponseEntity
-	 * 
-	 * @param String Emplacement Id
-	 * @return ArrayList<Evaluation> a table of Evaluations
-	 * 
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/evaluations")
-	public ArrayList<Evaluation> getEmplacementEvaluations(@PathVariable String id) {
-		if (!emplacementService.emplacementExists(id))
-			return new ArrayList<Evaluation>();
-		return evaluationService.getAllEvaluations(id);
-	}
-
-	/**
-	 * Evaluate an Emplacement with its ID
-	 * 
-	 * @param String Emplacement id
-	 * @return Evaluation TODO : Change this to ResponseEntity
-	 * 
-	 * @param evaluation
-	 * @param id
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/evaluer")
-	public Evaluation evaluateEmplacement(@RequestBody Evaluation evaluation, @PathVariable String id,
-			HttpServletRequest request) {
-		if (!emplacementService.emplacementExists(id))
-			return new Evaluation(); // TODO : Should be a 404 with ResponseEntity
-
-		Emplacement emplacement = emplacementService.getEmplacement(id);
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		evaluation.setIdUser(user.getId());
-		evaluation.setEmplacement(emplacement);
-		evaluationService.addEvaluation(evaluation);
-		return evaluation;// TODO : Should be a 404 with ResponseEntity
+		return handleResponse(null, handleAPICall("query", name, radius, position),
+				"Emplacements trouves par nom: " + name + " et position: " + position + ".", HttpStatus.OK);
 	}
 
 	/**
@@ -147,12 +91,76 @@ public class EmplacementController {
 	 * @param
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/categorie/{categorieId}/{radius}/{position}")
-	public ArrayList<Emplacement> getEmplacementsByCategorie(@PathVariable String categorieId,
+	public ResponseEntity<EmplacementResponse> getEmplacementsByCategorie(@PathVariable String categorieId,
 			@PathVariable String radius, @PathVariable String position) {
-		if (emplacementService.emplacementExistsByName(categorieId)) {
-			return emplacementService.getEmplacementsByCategorie(categorieId);
-		}
-		return handleAPICall("category", categorieId, radius, position);
+		return handleResponse(null, handleAPICall("category", categorieId, radius, position),
+				"Emplacements trouves avec succes.", HttpStatus.OK);
+	}
+
+	/**
+	 * Get all Emplacements from DB
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/")
+	public ResponseEntity<EmplacementResponse> getAllEmplacements() {
+		ArrayList<Emplacement> emplacements = new ArrayList<>();
+		emplacements.addAll(emplacementService.getAllEmplacements());
+		return handleResponse(null, emplacements, "Liste de tous les emplacements", HttpStatus.OK);
+	}
+
+	/**
+	 * Add new Emplacement
+	 * 
+	 * @param Emplacement
+	 * @return Emplacement
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/add")
+	public ResponseEntity<EmplacementResponse> addEmplacement(@RequestBody Emplacement emplacement) {
+		emplacementService.addEmplacement(emplacement);
+		return handleResponse(emplacement, null,
+				"Emplacement: " + emplacement.getNomEmplacement() + " ajoute avec succes !", HttpStatus.OK);
+	}
+
+	/**
+	 * Get all Evaluations for an Emplacement
+	 * 
+	 * @param String Emplacement Id
+	 * @return ArrayList<Evaluation> a table of Evaluations
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/evaluations")
+	public ResponseEntity<EvaluationResponse> getEmplacementEvaluations(@PathVariable String id) {
+		if (!emplacementService.emplacementExists(id))
+			return EvaluationController.handleResponse(null, null,
+					"Oops, cet emplacement n'existe pas. Veuillez verifier les champs inseres.", HttpStatus.NOT_FOUND);
+		return EvaluationController.handleResponse(null, evaluationService.getAllEvaluations(id),
+				"Evaluations de l'emplacement " + id, HttpStatus.OK);
+	}
+
+	/**
+	 * Evaluate an Emplacement with its ID
+	 * 
+	 * @param String Emplacement id
+	 * @return Evaluation
+	 * 
+	 * @param evaluation
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/evaluer")
+	public ResponseEntity<EvaluationResponse> evaluateEmplacement(@RequestBody Evaluation evaluation,
+			@PathVariable String id, HttpServletRequest request) {
+		if (!emplacementService.emplacementExists(id))
+			return EvaluationController.handleResponse(null, null,
+					"Oops, cet emplacement n'existe pas. Veuillez verifier les champs inseres.", HttpStatus.NOT_FOUND);
+
+		Emplacement emplacement = emplacementService.getEmplacement(id);
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		evaluation.setIdUser(user.getId());
+		evaluation.setEmplacement(emplacement);
+		evaluationService.addEvaluation(evaluation);
+		return EvaluationController.handleResponse(evaluation, evaluationService.getAllEvaluations(id),
+				"Votre evaluation a ete ajoutee avec succes !", HttpStatus.OK);
 	}
 
 	/**
@@ -175,9 +183,9 @@ public class EmplacementController {
 
 			return emplacements;
 		} catch (JSONException e) {
-			return null;// TODO : return response entity with status code of 500
+			return null;
 		} catch (IOException e) {
-			return null;// TODO : return response entity with status code of 500
+			return null;
 		}
 	}
 
@@ -189,8 +197,9 @@ public class EmplacementController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/pending")
-	public ArrayList<Emplacement> getInactiveEmplacements() {
-		return emplacementService.getInactiveEmplacements();
+	public ResponseEntity<EmplacementResponse> getInactiveEmplacements() {
+		return handleResponse(null, emplacementService.getInactiveEmplacements(),
+				"Liste des emplacement en attente de confirmation", HttpStatus.OK);
 	}
 
 	/**
@@ -202,13 +211,15 @@ public class EmplacementController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.PATCH, value = "/emplacements/{id}/approve")
-	public Emplacement approvePendingEmplacement(@PathVariable String id) {
+	public ResponseEntity<EmplacementResponse> approvePendingEmplacement(@PathVariable String id) {
 		if (!emplacementService.emplacementExists(id))
-			return new Emplacement();// TODO : Return Response Entity with not 404 found message
+			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
 		boolean updated = emplacementService.approveEmplacement(id);
 		if (!updated)
-			return new Emplacement();// TODO: Return 500 Internal server error(Can also be 400 Bad request)
-		return emplacementService.getEmplacement(id);// TODO return Response entity with 200 Status code
+			return handleResponse(null, null, "Oops. Il y a eu un probleme. Veuillez reessayer plus tard.",
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		return handleResponse(emplacementService.getEmplacement(id), null, "L'emplacement: " + id + " a ete confirme !",
+				HttpStatus.OK);
 	}
 
 	/**
@@ -219,13 +230,15 @@ public class EmplacementController {
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.PATCH, value = "/emplacements/{id}/ignore")
-	public Emplacement ignorePendingEmplacement(@PathVariable String id) {
+	public ResponseEntity<EmplacementResponse> ignorePendingEmplacement(@PathVariable String id) {
 		if (!emplacementService.emplacementExists(id))
-			return new Emplacement();// TODO : Return Response Entity with not 404 found message
+			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
 		boolean ignored = emplacementService.ignoreEmplacement(id);
 		if (!ignored)
-			return new Emplacement();// TODO: Return 500 Internal server error(Can also be 400 Bad request)
-		return emplacementService.getEmplacement(id);// Todo return Respons entity with 200 Status code
+			return handleResponse(null, null, "Oops. Erreur du systeme. Veillez reessayer plus tard.",
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		return handleResponse(emplacementService.getEmplacement(id), null, "L'emplacement: " + id + " a ete ignore !",
+				HttpStatus.OK);
 	}
 
 	/**
@@ -236,9 +249,52 @@ public class EmplacementController {
 	 * @param String day
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/{id}/{jour}")
-	public HashMap<Integer, Integer> getEmplacementStat(@PathVariable String id, @PathVariable String jour) {
+	public ResponseEntity<EmplacementResponse> getEmplacementStat(@PathVariable String id, @PathVariable String jour) {
 		if (!emplacementService.emplacementExists(id))
-			return null; // TODO : Response Entity 404
-		return emplacementService.getEmplacementStat(id, jour);
+			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
+		Emplacement emplacement = emplacementService.getEmplacement(id);
+		return handleStatResponse(null, emplacementService.getEmplacementStat(id, jour),
+				"Statistiques de :" + emplacement.getId() + " du jour " + jour + ".", HttpStatus.OK);
+	}
+
+	/**
+	 * Response Entity used to handle HTTP response headers and body when
+	 * emplacement or list of emplacements are requested
+	 * 
+	 * @param Emplacement            to show
+	 * @param ArrayList<Emplacement> list of emplacement if the user requests more
+	 *                               than one
+	 * @param String                 response body message
+	 * @param int                    response status code
+	 * @return ResponseEntoty<EmplacementResponse> the emplacement resource template
+	 */
+	public static ResponseEntity<EmplacementResponse> handleResponse(Emplacement e, ArrayList<Emplacement> emplacements,
+			String message, HttpStatus statusCode) {
+		HttpHeaders headers = new HttpHeaders();
+		int status = statusCode.value();
+		headers.add("status", String.valueOf(statusCode));
+		headers.add("message", message);
+		return ResponseEntity.status(status).headers(headers)
+				.body(new EmplacementResponse(e, emplacements, message, status));
+	}
+
+	/**
+	 * Response Entity used to handle HTTP response headers and body when statistics
+	 * are requested
+	 * 
+	 * @param Emplacement      to show
+	 * @param HashMap<Integer, Integer> keys: hours, values : weight (Ferme, Plein,
+	 *                         Moyen, Vide)
+	 * @param String           response body message
+	 * @param int              response status code
+	 * @return ResponseEntoty<EmplacementResponse> the emplacement resource template
+	 */
+	public static ResponseEntity<EmplacementResponse> handleStatResponse(Emplacement e, HashMap<Integer, Integer> stats,
+			String message, HttpStatus statusCode) {
+		HttpHeaders headers = new HttpHeaders();
+		int status = statusCode.value();
+		headers.add("status", String.valueOf(statusCode));
+		headers.add("message", message);
+		return ResponseEntity.status(status).headers(headers).body(new EmplacementResponse(e, stats, message, status));
 	}
 }

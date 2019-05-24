@@ -1,7 +1,5 @@
 package com.isbusy.restapi.isbusyrestapi.controllers;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -175,6 +173,7 @@ public class UserController<Favorie> {
 		return ResponseEntity.ok().headers(headers).body(new UserResponse("User Deleted successfully", 200));
 
 	}
+
 	// Favoris
 	@RequestMapping(method = RequestMethod.GET, value = "/favories")
 	public ArrayList<Emplacement> getAllFavoris() {
