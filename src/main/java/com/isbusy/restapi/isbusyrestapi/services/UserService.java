@@ -54,4 +54,13 @@ public class UserService<Favorie> {
 		favoris.addAll(e);
 		return favoris;
 	}
+
+	public void addFavoris(String emplacementId, long userId) {
+		emplacementRepository.addFavoris(emplacementId, userId);
+
+	}
+
+	public void deleteFavoris(String emplacementId) {
+		emplacementRepository.deleteFavorisByEmplacementId(emplacementId);
+	}
 }

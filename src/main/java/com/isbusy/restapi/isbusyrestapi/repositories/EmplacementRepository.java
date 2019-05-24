@@ -1,7 +1,11 @@
 package com.isbusy.restapi.isbusyrestapi.repositories;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
@@ -17,4 +21,14 @@ public interface EmplacementRepository extends CrudRepository<Emplacement, Strin
 
     @Query(value = "SELECT * FROM emplacement e INNER JOIN favoris f ON f.emplacement_id = e.id where f.user_id= ?1", nativeQuery = true)
     List<Emplacement> findFavoris(long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "insert into favoris (emplacement_id, user_id) VALUES (?1, ?2)", nativeQuery = true)
+    void addFavoris(String emplacementId, long userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "delete from Favoris  where emplacement_id = ?1", nativeQuery = true)
+    void deleteFavorisByEmplacementId(String emplacementId);
 }
