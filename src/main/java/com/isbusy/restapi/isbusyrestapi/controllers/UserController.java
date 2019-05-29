@@ -31,6 +31,7 @@ public class UserController<Favorie> {
 	@Autowired
 	private UserService userService;
 
+
 	// index
 	@CrossOrigin
 	@PreAuthorize("hasRole('ADMIN')")
@@ -138,6 +139,7 @@ public class UserController<Favorie> {
 	public ResponseEntity<UserResponse> updateUser(@RequestBody User user) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User) auth.getPrincipal();
+		User  user1 = userService.getUser(user.getId());
 		HttpHeaders headers = new HttpHeaders();
 
 		if (String.valueOf(user.getId()).isEmpty() || currentUser.getId() != user.getId()) {
@@ -153,6 +155,7 @@ public class UserController<Favorie> {
 		headers.add("status", "200");
 		headers.add("message", "OK");
 
+		user.setPassword(user1.getMotDePasse());
 		userService.updateUser(user);
 		return ResponseEntity.ok().headers(headers).body(new UserResponse(user, "User Updated successfully", 200));
 
