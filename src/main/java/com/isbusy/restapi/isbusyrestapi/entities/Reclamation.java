@@ -31,10 +31,10 @@ private Date created_at;
 @Column(name="id_user")
 private int id_user;
 
-@ManyToOne
-@JoinColumn(name = "id_user", nullable = false, insertable = false, updatable = false)
-private User user;
 
+
+    public Reclamation() {
+    }
     
 
     public Reclamation(int id, String titre, String message, Date created_at, int id_user) {
