@@ -1,6 +1,7 @@
 package com.isbusy.restapi.isbusyrestapi.entities;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,9 +28,9 @@ private String titre;
 private String message;
 @Column(name="created_at")
 @CreationTimestamp
-private Date created_at;
+private Timestamp created_at;
 @Column(name="id_user")
-private int id_user;
+private long id_user;
 
 
 
@@ -37,7 +38,7 @@ private int id_user;
     }
     
 
-    public Reclamation(int id, String titre, String message, Date created_at, int id_user) {
+    public Reclamation(int id, String titre, String message, Timestamp created_at, long id_user) {
         this.id = id;
         this.titre = titre;
         this.message = message;
@@ -69,19 +70,19 @@ private int id_user;
         this.message = message;
     }
 
-    public Date getCreated_at() {
+    public Timestamp getCreated_at() {
         return this.created_at;
     }
 
-    public void setCreated_at(Date created_at) {
+    public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
 
-    public int getId_user() {
+    public long getId_user() {
         return this.id_user;
     }
 
-    public void setId_user(int id_user) {
+    public void setId_user(long id_user) {
         this.id_user = id_user;
     }
 

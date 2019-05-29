@@ -1,8 +1,10 @@
 package com.isbusy.restapi.isbusyrestapi.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
+import com.isbusy.restapi.isbusyrestapi.responses.ReclamationResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -53,14 +55,26 @@ public class ReclamationController {
     }*/
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value = "/reclamations")
-    public List<Reclamation> getAllEvaluations() {
-        return reclamationService.getAllReclamations();
+    public ResponseEntity<ReclamationResponse> getAllEvaluations() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("status", "200");
+        headers.add("message", "OK");
+
+        return ResponseEntity.ok().headers(headers).body(new ReclamationResponse(null, "Liste des reclamations", 200, reclamationService.getAllReclamations()));
     }
     
     @RequestMapping(method = RequestMethod.POST, value = "/reclamations/add")
-    public Reclamation addReclamation(@RequestBody Reclamation reclamation) {
+    public ResponseEntity<ReclamationResponse> addReclamation(@RequestBody Reclamation reclamation) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("status", "200");
+        headers.add("message", "OK");
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        reclamation.setId_user(currentUser.getId());
         reclamationService.addReclamation(reclamation);
-            return reclamation;
+            return ResponseEntity.ok().headers(headers).body(new ReclamationResponse(reclamation, "Reclamation enregistrée avec succès", 200, null));
     }
 
 }
