@@ -213,7 +213,7 @@ public class EmplacementController {
 	 * 
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(method = RequestMethod.PATCH, value = "/emplacements/{id}/approve")
+	@RequestMapping(method = RequestMethod.PUT, value = "/emplacements/{id}/approve")
 	public ResponseEntity<EmplacementResponse> approvePendingEmplacement(@PathVariable String id) {
 		if (!emplacementService.emplacementExists(id))
 			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
@@ -232,7 +232,7 @@ public class EmplacementController {
 	 * 
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(method = RequestMethod.PATCH, value = "/emplacements/{id}/ignore")
+	@RequestMapping(method = RequestMethod.PUT, value = "/emplacements/{id}/ignore")
 	public ResponseEntity<EmplacementResponse> ignorePendingEmplacement(@PathVariable String id) {
 		if (!emplacementService.emplacementExists(id))
 			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
