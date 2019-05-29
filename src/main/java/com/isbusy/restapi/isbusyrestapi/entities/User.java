@@ -109,7 +109,9 @@ public class User implements Serializable{
 		this.motDePasse = BCrypt.hashpw(motDePasse, BCrypt.gensalt(4));
 	}
 
-
+	public void setPassword(String password){
+		this.motDePasse = password;
+	}
 
 	public String getEmail() {
 		return email;
