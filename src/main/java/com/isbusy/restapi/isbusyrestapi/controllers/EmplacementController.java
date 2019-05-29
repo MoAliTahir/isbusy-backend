@@ -213,7 +213,7 @@ public class EmplacementController {
 	 * 
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(method = RequestMethod.PUT, value = "/emplacements/{id}/approve")
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/approve")
 	public ResponseEntity<EmplacementResponse> approvePendingEmplacement(@PathVariable String id) {
 		if (!emplacementService.emplacementExists(id))
 			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
@@ -232,7 +232,7 @@ public class EmplacementController {
 	 * 
 	 */
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(method = RequestMethod.PUT, value = "/emplacements/{id}/ignore")
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/{id}/ignore")
 	public ResponseEntity<EmplacementResponse> ignorePendingEmplacement(@PathVariable String id) {
 		if (!emplacementService.emplacementExists(id))
 			return handleResponse(null, null, "Oops. Cet emplacement n'existe pas.", HttpStatus.NOT_FOUND);
@@ -279,7 +279,7 @@ public class EmplacementController {
 		return handleResponse(emplacementService.getEmplacement(id),null, "Emplacement ajouté aux favories avec succes", HttpStatus.OK);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/favories/delete/{id}")
+	@RequestMapping(method = RequestMethod.POST, value = "/favories/delete/{id}")
 	public ResponseEntity<EmplacementResponse> deleteFavoris(@PathVariable String id) {
 		userService.deleteFavoris(id);
 		return handleResponse(null, null, "Emplacement supprimé de votre liste de favories ", HttpStatus.OK);

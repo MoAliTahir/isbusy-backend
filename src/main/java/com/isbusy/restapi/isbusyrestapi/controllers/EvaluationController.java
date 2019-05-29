@@ -48,7 +48,7 @@ public class EvaluationController {
 		evaluationService.addEvaluation(evaluation);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "/emplacements/delete/{emplacementId}/evaluations/{id}")
+	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/delete/{emplacementId}/evaluations/{id}")
 	public void deleteCourse(@PathVariable long id) {
 		System.out.println("DELETE");
 		evaluationService.deleteEvaluation(id);

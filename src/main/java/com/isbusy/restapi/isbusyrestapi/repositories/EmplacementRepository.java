@@ -29,6 +29,6 @@ public interface EmplacementRepository extends CrudRepository<Emplacement, Strin
 
     @Modifying
     @Transactional
-    @Query(value = "delete from Favoris  where emplacement_id = ?1", nativeQuery = true)
+    @Query(value = "delete from favoris  where emplacement_id = ?1", nativeQuery = true)
     void deleteFavorisByEmplacementId(String emplacementId);
 }

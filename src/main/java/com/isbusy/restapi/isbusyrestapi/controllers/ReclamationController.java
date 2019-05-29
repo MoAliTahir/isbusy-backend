@@ -30,29 +30,7 @@ public class ReclamationController {
 
     @Autowired
     private ReclamationService reclamationService;
-/*
-    @RequestMapping(method = RequestMethod.GET, value = "/reclamations")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<ReclamationResponse> getAllReclamations() {
-		HttpHeaders headers = new HttpHeaders();
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User currentUser = (User) auth.getPrincipal();
-		Iterator iterator = currentUser.getRoles().iterator();
-		Role role = (Role) iterator.next();
-		if (!role.getRole().equals("ADMIN")) {
-			headers.add("status", "401");
-			headers.add("message", "Unauthorized");
-
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).headers(headers)
-					.body(new UserResponse(currentUser, "Lack of privileges", 401));
-		}
-
-		headers.add("status", "200");
-		headers.add("message", "OK");
-		return ResponseEntity.ok().headers(headers).body(new UserResponse(userService.getAllUsers(), "Succes", 200));
-    }
-    }*/
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value = "/reclamations")
     public ResponseEntity<ReclamationResponse> getAllEvaluations() {

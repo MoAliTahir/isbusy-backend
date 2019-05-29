@@ -135,7 +135,7 @@ public class UserController<Favorie> {
 
 	// modifier
 	@CrossOrigin
-	@RequestMapping(method = RequestMethod.PUT, value = "/users/update")
+	@RequestMapping(method = RequestMethod.POST, value = "/users/update")
 	public ResponseEntity<UserResponse> updateUser(@RequestBody User user) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User) auth.getPrincipal();
@@ -163,7 +163,7 @@ public class UserController<Favorie> {
 
 	// suppprimer
 	@CrossOrigin
-	@RequestMapping(method = RequestMethod.DELETE, value = "/users/delete")
+	@RequestMapping(method = RequestMethod.POST, value = "/users/delete")
 	public ResponseEntity<UserResponse> deleteUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User currentUser = (User) auth.getPrincipal();
