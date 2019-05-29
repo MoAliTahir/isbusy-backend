@@ -46,6 +46,8 @@ public class User implements Serializable{
 
 	@ManyToMany(mappedBy = "users")
 	private List<Emplacement> emplacements;
+	@OneToMany(mappedBy = "user")
+	private Set<Reclamation> reclamations;
 
 	public User() {
 	}
