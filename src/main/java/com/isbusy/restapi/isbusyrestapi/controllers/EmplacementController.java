@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.isbusy.restapi.isbusyrestapi.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +121,8 @@ public class EmplacementController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/add")
 	public ResponseEntity<EmplacementResponse> addEmplacement(@RequestBody Emplacement emplacement) {
+		Random val = new Random();
+		emplacement.setId(String.valueOf(val.nextLong()));
 		emplacementService.addEmplacement(emplacement);
 		return handleResponse(emplacement, null,
 				"Emplacement: " + emplacement.getNomEmplacement() + " ajoute avec succes !", HttpStatus.OK);
