@@ -121,8 +121,14 @@ public class EmplacementController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/emplacements/add")
 	public ResponseEntity<EmplacementResponse> addEmplacement(@RequestBody Emplacement emplacement) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
+
 		Random val = new Random();
 		emplacement.setId(String.valueOf(val.nextLong()));
+		ArrayList<User> users = new ArrayList<>();
+		users.add(userService.getUser(currentUser.getId()));
+		emplacement.setUsers(users);
 		emplacementService.addEmplacement(emplacement);
 		return handleResponse(emplacement, null,
 				"Emplacement: " + emplacement.getNomEmplacement() + " ajoute avec succes !", HttpStatus.OK);
