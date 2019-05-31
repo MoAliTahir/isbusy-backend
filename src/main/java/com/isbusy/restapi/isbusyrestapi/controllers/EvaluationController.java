@@ -2,6 +2,7 @@ package com.isbusy.restapi.isbusyrestapi.controllers;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,6 +68,16 @@ public class EvaluationController {
 		headers.add("message", message);
 		return ResponseEntity.status(status).headers(headers)
 				.body(new EvaluationResponse(evaluation, evaluations, message, status));
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats/votes")
+	public int countVotes() {
+		return evaluationService.countVotes();
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats/emplacementsByCategorie")
+	public ArrayList<?> countEmplacementByCategorie() {
+		return evaluationService.countEmplacementsByCategorie();
 	}
 
 }

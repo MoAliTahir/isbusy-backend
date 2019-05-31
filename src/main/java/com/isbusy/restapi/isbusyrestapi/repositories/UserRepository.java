@@ -11,4 +11,6 @@ public interface UserRepository extends  CrudRepository<User,Long>{
 
 	Optional<User> findByUsername(String username);
 
+	@Query(value = "SELECT count(id) FROM user", nativeQuery = true)
+	int getCountUsers();
 }

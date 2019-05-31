@@ -63,4 +63,8 @@ public class UserService<Favorie> {
 	public void deleteFavoris(String emplacementId) {
 		emplacementRepository.deleteFavorisByEmplacementId(emplacementId);
 	}
+
+	public int countUsers(){
+		 return userRepository.getCountUsers();
+	}
 }

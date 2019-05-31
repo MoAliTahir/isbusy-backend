@@ -1,5 +1,7 @@
 package com.isbusy.restapi.isbusyrestapi.repositories;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
@@ -19,6 +21,12 @@ public interface EvaluationRepository extends CrudRepository<Evaluation, Long> {
 
 	@Query(value = "SELECT count(vote) FROM evaluation where emplacement_id=?1 and jour=?2 and heure=?3 and vote=?4", nativeQuery = true)
 	int getCountByJourAndHeureAndVote(String id, String jour, int heure, int vote);
+
+	@Query(value = "SELECT count(id) FROM evaluation", nativeQuery = true)
+	int getCountVote();
+
+	@Query(value = "SELECT categorie,count(id) AS total FROM emplacement GROUP BY categorie", nativeQuery = true)
+	ArrayList<?> getCountEmplacementByCategorie();
 
 	// Get Emplacement Evaluation with day
 	@Query(value = "SELECT * FROM evaluation WHERE emplacement_id = ?1 and jour = ?2", nativeQuery = true)

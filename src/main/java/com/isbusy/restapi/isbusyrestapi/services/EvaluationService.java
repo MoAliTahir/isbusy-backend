@@ -1,6 +1,7 @@
 package com.isbusy.restapi.isbusyrestapi.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,12 @@ public class EvaluationService {
 	// Get Evaluations by Emplacement Id
 	public List<Evaluation> findAllByEmplacementId(String emplacementId) {
 		return evaluationRepository.findByEmplacementId(emplacementId);
+	}
+
+	public int countVotes(){
+		return evaluationRepository.getCountVote();
+	}
+	public ArrayList<?> countEmplacementsByCategorie(){
+		return evaluationRepository.getCountEmplacementByCategorie();
 	}
 }

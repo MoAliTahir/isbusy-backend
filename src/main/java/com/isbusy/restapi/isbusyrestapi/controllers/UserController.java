@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isbusy.restapi.isbusyrestapi.entities.User;
+import com.isbusy.restapi.isbusyrestapi.services.EvaluationService;
 import com.isbusy.restapi.isbusyrestapi.services.UserService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -177,6 +178,10 @@ public class UserController<Favorie> {
 		return ResponseEntity.ok().headers(headers).body(new UserResponse("User Deleted successfully", 200));
 
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats/users")
+	public int countUsers() {
+		 return userService.countUsers();}
 
 
 

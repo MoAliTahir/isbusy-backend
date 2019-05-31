@@ -33,7 +33,7 @@ public class ReclamationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET, value = "/reclamations")
-    public ResponseEntity<ReclamationResponse> getAllEvaluations() {
+    public ResponseEntity<ReclamationResponse> getAllReclamations() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("status", "200");
         headers.add("message", "OK");
