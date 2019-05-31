@@ -194,6 +194,9 @@ public class EmplacementController {
 
 			for (int i = 0; i < placesFromAPI.size(); i++) {
 				emplacements.add(new Emplacement(placesFromAPI.get(i)));
+
+				if (emplacementService.emplacementExists(emplacements.get(i).getId()))
+					continue;
 				emplacementService.addEmplacement(emplacements.get(i));
 			}
 
