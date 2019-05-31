@@ -24,6 +24,12 @@ public class EmplacementService {
 	@Autowired
 	private EmplacementRepository emplacementRepository;
 
+	public List<Emplacement> getAllEmplacementsByLatitudeAndLongitude(double latitude, double longitude){
+		List<Emplacement> emplacements = new ArrayList<>();
+		emplacementRepository.findAllByLatitudeAndLongitude(latitude, longitude).forEach(emplacements::add);
+		return emplacements;
+	}
+
 	public List<Emplacement> getAllEmplacements() {
 		List<Emplacement> emplacements = new ArrayList<>();
 		emplacementRepository.findAll().forEach(emplacements::add);

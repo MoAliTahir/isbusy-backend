@@ -102,10 +102,13 @@ public class EmplacementController {
 	 * Get all Emplacements from DB
 	 */
 	@CrossOrigin
-	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/")
-	public ResponseEntity<EmplacementResponse> getAllEmplacements() {
+	@RequestMapping(method = RequestMethod.GET, value = "/emplacements/near/{position}")
+	public ResponseEntity<EmplacementResponse> getAllEmplacements(@PathVariable String position) {
+		String[] tab = position.split(",");
+		double latitude = Double.valueOf(tab[0]);
+		double longitude = Double.valueOf(tab[1]);
 		ArrayList<Emplacement> emplacements = new ArrayList<>();
-		emplacements.addAll(emplacementService.getAllEmplacements());
+		emplacements.addAll(emplacementService.getAllEmplacementsByLatitudeAndLongitude(latitude, longitude));
 		return handleResponse(null, emplacements, "Liste de tous les emplacements", HttpStatus.OK);
 	}
 

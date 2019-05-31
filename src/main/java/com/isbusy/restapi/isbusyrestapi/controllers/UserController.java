@@ -80,10 +80,11 @@ public class UserController<Favorie> {
 	@RequestMapping("/users/me")
 	public ResponseEntity<UserResponse> getCurrentUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User) auth.getPrincipal();
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("status", "200");
 		headers.add("messgae", "OK");
-		return ResponseEntity.ok().headers(headers).body(new UserResponse((User) auth.getPrincipal(), "Success", 200));
+		return ResponseEntity.ok().headers(headers).body(new UserResponse(userService.getUser(currentUser.getId()), "Success", 200));
 	}
 
 	@CrossOrigin

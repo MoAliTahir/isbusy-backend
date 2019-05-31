@@ -31,4 +31,8 @@ public interface EmplacementRepository extends CrudRepository<Emplacement, Strin
     @Transactional
     @Query(value = "delete from favoris  where emplacement_id = ?1", nativeQuery = true)
     void deleteFavorisByEmplacementId(String emplacementId);
+
+
+    @Query(value = "SELECT * FROM emplacement WHERE (latitude BETWEEN ?1 - 0.01 and ?1 + 0.01) AND (longitude BETWEEN ?2 -0.01 AND ?2 +0.01)", nativeQuery = true)
+    List<Emplacement> findAllByLatitudeAndLongitude(double latitude, double longitude);
 }
