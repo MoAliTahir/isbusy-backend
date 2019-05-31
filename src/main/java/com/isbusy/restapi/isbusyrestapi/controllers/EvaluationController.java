@@ -11,18 +11,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import com.isbusy.restapi.isbusyrestapi.entities.Emplacement;
 import com.isbusy.restapi.isbusyrestapi.entities.Evaluation;
 import com.isbusy.restapi.isbusyrestapi.services.EvaluationService;
+import com.isbusy.restapi.isbusyrestapi.services.UserService;
 import com.isbusy.restapi.isbusyrestapi.responses.EvaluationResponse;
+import com.isbusy.restapi.isbusyrestapi.responses.StatsResponse;
 
 @RestController
 public class EvaluationController {
 	// injecting the EvaluationService singleton
 	@Autowired
 	private EvaluationService evaluationService;
+
+	@Autowired
+	private UserService userService;
 
 	// index
 	// @RequestMapping(method = RequestMethod.GET, value =
@@ -70,14 +76,20 @@ public class EvaluationController {
 				.body(new EvaluationResponse(evaluation, evaluations, message, status));
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats/votes")
-	public int countVotes() {
-		return evaluationService.countVotes();
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats")
+	public ResponseEntity<StatsResponse> statistics() {
+		int votes = evaluationService.countVotes();
+		ArrayList<?> empCat = evaluationService.countEmplacementsByCategorie();
+		int users = userService.countUsers();
+
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("status", "200");
+		headers.add("message", "OK");
+		return ResponseEntity.ok().headers(headers).body(new StatsResponse(users, votes, "Les statistiques", 200, empCat));
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats/emplacementsByCategorie")
-	public ArrayList<?> countEmplacementByCategorie() {
-		return evaluationService.countEmplacementsByCategorie();
-	}
 
 }

@@ -179,9 +179,6 @@ public class UserController<Favorie> {
 
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/admin/stats/users")
-	public int countUsers() {
-		 return userService.countUsers();}
 
 
 
