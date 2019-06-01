@@ -193,13 +193,20 @@ public class EmplacementController {
 			ArrayList<Emplacement> emplacements = new ArrayList<>(); // Result Emplacement ArrayList
 
 			for (int i = 0; i < placesFromAPI.size(); i++) {
-				emplacements.add(new Emplacement(placesFromAPI.get(i)));
 
-				if (emplacementService.emplacementExists(emplacements.get(i).getId()))
+				if (emplacementService.emplacementExists(placesFromAPI.get(i).getId())) {
 					continue;
+				}
+				emplacements.add(new Emplacement(placesFromAPI.get(i)));
 				emplacementService.addEmplacement(emplacements.get(i));
 			}
-
+			System.out.println("======================> "+emplacements.size());
+			if (emplacements.size() == 0)
+			{
+				for (int i=0; i<placesFromAPI.size(); i++){
+					emplacements.add(emplacementService.getEmplacement(placesFromAPI.get(i).getId()));
+				}
+			}
 			return emplacements;
 		} catch (JSONException e) {
 			return null;
