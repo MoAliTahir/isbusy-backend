@@ -192,13 +192,16 @@ public class EmplacementController {
 					position);
 			ArrayList<Emplacement> emplacements = new ArrayList<>(); // Result Emplacement ArrayList
 
+			System.out.println("API SIZE====>"+placesFromAPI.size());
+
 			for (int i = 0; i < placesFromAPI.size(); i++) {
 
 				if (emplacementService.emplacementExists(placesFromAPI.get(i).getId())) {
 					continue;
 				}
+
+				emplacementService.addEmplacement(new Emplacement(placesFromAPI.get(i)));
 				emplacements.add(new Emplacement(placesFromAPI.get(i)));
-				emplacementService.addEmplacement(emplacements.get(i));
 			}
 			System.out.println("======================> "+emplacements.size());
 			if (emplacements.size() == 0)

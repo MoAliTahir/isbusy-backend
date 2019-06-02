@@ -23,9 +23,10 @@ public class Request {
 
     // Constants used to authenticate connection using Foursquare API
 
-    private static final String CLIENTID = "CEAWAZON0UJ4QHT2K2KPT34MNBWP41ME4VSKM0KMW4IVAJXK";
-    private static final String CLIENTSECRET = "VCPXHW5YOKDJLBVO4I550LZYCZV51DELBYQL55AAFCEEBG2C";
+    private static final String CLIENTID = "W0Y0M1K4VREUCB40I5T1G2MPHUNMGSNMQE3LA0KTYQDLRFEL";
+    private static final String CLIENTSECRET = "1ZPR5I3D4ZJVFQCNFGOQS10VSMOWSDKVRTOPIIDEMPWGBJCG";
     private static final String OAUTH = "POKNX3PYYGXOONGIBEK4QMQG2HOKAE0BAXZG4WVZRALEXO1T";
+
 
     // Constants used in URL building
 
