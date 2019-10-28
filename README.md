@@ -42,22 +42,6 @@ ___
 7. Application should start on port 8080
 
 
-___
-
-
-## Test if the project was properly set up
-1. We have implemented a test Controller called PlaceController used to check whether the project was properly set up.
-Go to your browser (or add a new **Postman** Get Request) and type in: 
-    + Get : http://localhost:8080/places/
-        - **Expected behavior** : You should see a text saying: **Places route: Get all places** 
-        - Note that this route's method does not use **ResponseBody** annotation so you should see plain text
-    + Get Request: http://localhost:8080/places/1
-        - **Expected behavior** : You should receive a JSON file:
-        ```
-        {"place":{"id":null,"name":null},"message":"OK","status":200}
-        ```
-        - This method uses **ResponseBody** annotation
-        - This method also inserts dummy Place into database
 
 ___
 ## Git Workflow
