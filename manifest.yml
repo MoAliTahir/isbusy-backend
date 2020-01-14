@@ -1,0 +1,9 @@
+applications:
+ - name: isbusyrestapi
+   path: target/isbusyrestapi-0.0.2-SNAPSHOT.jar
+   domain: cfapps.io
+   memory: 1024m
+   instances: 1
+
+services:
+  - mysql
